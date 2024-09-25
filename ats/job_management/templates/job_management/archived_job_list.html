@@ -1,0 +1,56 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block title %}Home{% endblock %}
+{% block css_files %}
+<link rel="stylesheet" href="{% static 'job_management/home.css' %}" />
+<link rel="stylesheet" href="{% static 'job_management/archived_button.css' %}" />
+
+<link
+  href="https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css"
+  rel="stylesheet"
+/>
+{% endblock %}
+
+{% block content %}
+<div class='container3'>
+    <div class="container-title">
+        <h2 class="title-h2">Archived Jobs</h2>
+    </div>
+    <table class="job-table">
+        <thead>
+            <tr class="table-row">
+                <th class="table-no">#</th>
+                <th class="job-title-table">Job Title</th>
+                <th class="job-location-table">Location</th>
+                <th class="job-created-on">Created On</th>
+                <th class="job-actions">Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+           {% for job in archived_jobs %}
+            <tr>
+                <td>{{ forloop.counter }}</td>
+                <td>{{ job.title }}</td>
+                <td>
+                    {% if job.is_remote %}
+                      Remote
+                    {% else %}
+                      {{ job.city }}, {{ job.area }}, {{ job.pincode }}
+                    {% endif %}
+                </td>
+                <td>{{ job.posted_at }}</td>
+                <td>
+                    <a href="{% url 'review_job_post' job.pk %}">Edit</a> |
+                    <a href="{% url 'delete' job.pk %}">Delete</a> |
+                    <a href="{% url 'restore' job.pk %}">Restore</a>
+                </td>
+            </tr>
+            {% empty %}
+            <tr>
+                <td colspan="5">No archived jobs available.</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% endblock %}

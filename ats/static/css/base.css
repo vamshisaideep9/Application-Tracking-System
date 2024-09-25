@@ -1,0 +1,182 @@
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@100;300;400;500;600&display=swap');
+
+
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+    font-family: 'Poppins', sans-serif;
+}
+
+body {
+    min-height: 100%;
+    background-color: white;
+}
+
+nav {
+    display: flex;
+    justify-content: space-between; /* Spread content to left and right */
+    align-items: center;
+    position: fixed;
+    top: 0;
+    left: 0;
+    height: 50px;
+    width: 100%;
+    background: #8db4e0;
+    transition: width 0.3s;
+    box-shadow: 0 0 1px rgba(0, 0, 0, 0.1);
+}
+
+nav .logo{
+    display: flex;
+    align-items: center;
+    margin: 0 20px;
+    margin-top: 14px;
+
+}
+.logo .menu-icon {
+    color: #333;
+    font-size: 24px;
+    margin-right: 14px;
+    cursor: pointer;
+}
+
+.logo .logo-name {
+    color: #333;
+    font-size: 22px;
+    font-weight: 500;
+
+}
+
+nav .sidebar{
+    position: fixed;
+    top: 0;
+    left: -100%;
+    height: 100%;
+    width: 140px;
+    padding: 20px 0;
+    background-color: #ffffff;
+    box-shadow: 0 5px 10px rgba(0,0,0,0.1);
+    transition: all 0.4s ease;
+}
+
+nav.open .sidebar{
+    left: 0;
+
+}
+
+.sidebar .sidebar-content{
+    display: flex;
+    height: 100%;
+    flex-direction: column;
+    justify-content: space-between;
+    padding: 30px 16px;
+
+}
+
+.sidebar-content .list{
+    list-style: none;
+
+}
+
+.list .nav-link{
+    display: flex;
+    align-items: center;
+    padding: 14px 12px;
+    border-radius: 8px;
+    text-decoration: none;
+}
+
+.nav-link:hover {
+    background-color: #9090e4;
+}
+
+.nav-link .icon{
+    margin-right: 14px;
+    font-size: 20px;
+    color: black;
+}
+
+.nav-link .link{
+    font-size: 16px;
+    color: black;
+    font-weight: 400;
+
+}
+
+.nav-link:hover .icon,
+.nav-link:hover .link {
+    color: black;
+}
+
+
+.overlay{
+    position: fixed;
+    top: 0;
+    left: -100%;
+    height: 1000vh;
+    width: 100%;
+    background: rgba(0,0,0,0.3);
+    transition: all 0.4s ease;
+    pointer-events: none;
+}
+
+nav.open ~ .sidebar{
+    opacity: 1;
+    left: 140px;
+    pointer-events: auto;
+}
+
+
+.account-section {
+   position: relative;
+   display: inline-block;
+}
+
+.profile-icon {
+    font-size: 24px;
+    cursor: pointer;
+    margin-top: 5px;
+    margin-right: 10px;
+    color: black;
+}
+
+.account-section .bx-user {
+    font-size: 26px; /* Increase the size to 35px */
+    margin-top: 5px;
+    cursor: pointer;
+    color: black;
+}
+
+.dropdown-menu {
+    display: none; /* Hidden by default */
+    position: absolute;
+    top: 40px; /* Position below the icon */
+    background-color: #fff;
+    right: 10%; /* Align with the center of the icon */
+ /* Center it */
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    box-shadow: 0 5px 10px rgba(0,0,0,0.1);
+    z-index: 1000;
+  }
+  
+  .dropdown-menu ul {
+    list-style: none;
+    margin: 0;
+    padding: 10px 0;
+  }
+  
+  .dropdown-menu ul li {
+    padding: 10px 20px;
+  }
+  
+  .dropdown-menu ul li a {
+    text-decoration: none;
+    color: black;
+    font-size: 14px;
+  }
+  
+  .dropdown-menu ul li:hover {
+    background-color: #f1f1f1;
+  }

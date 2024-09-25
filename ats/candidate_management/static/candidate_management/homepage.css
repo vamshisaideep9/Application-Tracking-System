@@ -1,0 +1,54 @@
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@100;300;400;500;600&display=swap');
+
+
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+    font-family: 'Poppins', sans-serif;
+}
+
+body {
+    min-height: 100%;
+    background-color: white;
+}
+
+.open2 .logo-name{
+    margin-left: 15px;
+    color: black;
+}
+
+
+nav {
+    display: flex;
+    justify-content: space-between; /* Spread content to left and right */
+    align-items: center;
+    position: fixed;
+    top: 0;
+    left: 0;
+    height: 50px;
+    width: 100%;
+    background: #8db4e0;
+    transition: width 0.3s;
+    box-shadow: 0 0 1px rgba(0, 0, 0, 0.1);
+}
+
+
+
+.open2 .home-01{
+    margin-right: 87%;
+    padding: 12px;
+    margin-top: 3px;
+    color: black;
+    text-decoration: none;
+    font-weight: bold;
+    padding: 10px 20px; /* Padding around the link */
+    border: 2px solid transparent; /* Initially transparent border */
+    transition: border 0.3s ease; /* Smooth transition for the border */
+}
+
+
+.open2 .home-01:hover{
+    border: 2px solid black; /* Border becomes visible on hover */
+    background-color: transparent; /* Ensure no background on hover */
+}

@@ -1,0 +1,148 @@
+{% extends 'base.html' %} {% load static %} {% block title %}Create Job Post
+{%endblock %} {% block css_files %}
+<link rel="stylesheet" href="{% static 'job_management/job_manage.css' %}" />
+<link
+  href="https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css"
+  rel="stylesheet"
+/>
+{% endblock %} {% block content %}
+<div class="job1-container">
+  <h2>Create Job Post</h2>
+</div>
+
+<div class="form1-container">
+  <form method="post" enctype="multipart/form-data" class="job1-form">
+    {% csrf_token %} {% if form.errors %}
+    <div class="form-errors">
+      <ul>
+        {% for field in form %} {% for error in field.errors %}
+        <li>{{ field.label }}: {{ error }}</li>
+        {% endfor %} {% endfor %} {% for error in form.non_field_errors %}
+        <li>{{ error }}</li>
+        {% endfor %}
+      </ul>
+    </div>
+    {% endif %}
+
+    <!-- Form Groups -->
+    <div class="form-group">
+      <label for="{{ form.title.id_for_label }}">{{ form.title.label }}</label>
+      <div class="title-box">{{ form.title }}</div>
+    </div>
+
+    <div class="form-group">
+      <label for="{{ form.description.id_for_label }}"
+        >{{ form.description.label }}</label
+      >
+      <div class="description-box">{{ form.description }}</div>
+    </div>
+
+    <div class="form-group">
+      <label for="{{ form.is_remote.id_for_label }}"
+        >{{ form.is_remote.label }}</label
+      >
+      <div class="is-remote-box">{{ form.is_remote }}</div>
+    </div>
+
+    <div id="location-fields" class="location-fields">
+      <div class="form-group">
+        <label for="{{ form.city.id_for_label }}">{{ form.city.label }}</label>
+        <div class="city-box">{{ form.city }}</div>
+      </div>
+      <div class="form-group">
+        <label for="{{ form.area.id_for_label }}">{{ form.area.label }}</label>
+        <div class="area-box">{{ form.area }}</div>
+      </div>
+      <div class="form-group">
+        <label for="{{ form.pincode.id_for_label }}"
+          >{{ form.pincode.label }}</label
+        >
+        <div class="pincode-box">{{ form.pincode }}</div>
+      </div>
+      <div class="form-group">
+        <label for="{{ form.address.id_for_label }}"
+          >{{ form.address.label }}</label
+        >
+        <div class="address-box">{{ form.address }}</div>
+      </div>
+    </div>
+
+    <div class="form-group">
+      <label class="label-job-type">Job Type:</label>
+      <fieldset class="checkbox-group">
+        <legend>Select Job Types</legend>
+        <div class="scrollable-checkbox">
+          {% for choice in form.job_type %}
+          <div class="checkbox-option">
+            {{ choice }} <!-- Renders the checkbox with its label -->
+          </div>
+          {% endfor %}
+        </div>
+      </fieldset>
+    </div>
+
+    <div class="form-group">
+      <label for="{{ form.min_pay.id_for_label }}"
+        >{{ form.min_pay.label }}</label
+      >
+      <div class="min-pay-box">{{ form.min_pay }}</div>
+    </div>
+
+    <div class="form-group">
+      <label for="{{ form.max_pay.id_for_label }}"
+        >{{ form.max_pay.label }}</label
+      >
+      <div class="max-pay-box">{{ form.max_pay }}</div>
+    </div>
+
+    <div class="form-group">
+      <label for="{{ form.start_date.id_for_label }}"
+        >{{ form.start_date.label }}</label
+      >
+      <div class="start-date-box">{{ form.start_date }}</div>
+    </div>
+
+    <div class="form-group">
+      <label for="{{ form.category.id_for_label }}"
+        >{{ form.category.label }}</label
+      >
+      <div class="category-box">{{ form.category }}</div>
+    </div>
+
+    <div class="form-group">
+      <label class="label-requirements">Requirements:</label>
+      <fieldset class="checkbox-group">
+        <legend>Select Requirements</legend>
+        <div class="scrollable-checkbox">
+          {% for choice in form.requirements %}
+          <div class="checkbox-option">
+            {{ choice }} <!-- Renders the checkbox with its label -->
+          </div>
+          {% endfor %}
+        </div>
+      </fieldset>
+    </div>
+    <div class="submit-button">
+      <button type="submit" class="submit">Submit</button>
+    </div>
+  </form>
+</div>
+
+<script>
+  document.addEventListener("DOMContentLoaded", function () {
+    const remoteCheckbox = document.querySelector("#id_is_remote");
+    const locationFields = document.getElementById("location-fields");
+
+    function toggleLocationFields() {
+      locationFields.style.display = remoteCheckbox.checked ? "none" : "block"; // Show/hide location fields
+    }
+
+    // Initial check
+    toggleLocationFields();
+
+    // Add event listener for change
+    remoteCheckbox.addEventListener("change", toggleLocationFields);
+  });
+</script>
+
+{% endblock %}

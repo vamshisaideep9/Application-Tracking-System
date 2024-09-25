@@ -1,0 +1,87 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>{% block title %}{% endblock %}</title>
+    <link rel="stylesheet" href="{% static 'css/base.css' %}" />
+    <link
+      href="https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css"
+      rel="stylesheet"
+    />
+    {% block css_files %}{% endblock %}
+  </head>
+
+  <body>
+    <nav class="open">
+      <div class="logo">
+        <i class="bx bx-menu menu-icon"></i>
+        <span class="logo-name"></span>
+      </div>
+
+      <div class="sidebar">
+        <div class="logo">
+          <i class="bx bx-menu menu-icon"></i>
+          <span class="logo-name">Menu</span>
+        </div>
+        <div class="sidebar-content">
+          <ul class="lists">
+            <li class="list">
+              <a href="{% url 'job_create_step_1' %}" class="nav-link">
+                <i class="bx bx-plus icon"></i>
+                <span class="link">Create</span>
+              </a>
+            </li>
+            <li class="list">
+              <a href="{% url 'home' %}" class="nav-link">
+                <i class="bx bx-home-alt icon"></i>
+                <span class="link">Home</span>
+              </a>
+            </li>
+          </ul>
+        </div>
+      </div>
+      <div class="account-section">
+        <i class='bx bx-user profile-icon' id="profileIcon"></i>
+        <div class="dropdown-menu">
+          <ul>
+            <li><a href="#">Logout</a></li>
+          </ul>
+        </div>
+      </div>
+    </nav>
+    <section class="overlay"></section>
+    <main>{% block content %}{% endblock %}</main>
+    <script>
+      const navBar = document.querySelector("nav"),
+        menuBtns = document.querySelectorAll(".menu-icon"),
+        overlay = document.querySelector(".overlay");
+
+      menuBtns.forEach((menuBtn) => {
+        menuBtn.addEventListener("click", () => {
+          navBar.classList.toggle("open");
+        });
+      });
+
+      overlay.addEventListener("click", () => {
+        navBar.classList.remove("open");
+      });
+    </script>
+    <script>
+      const profileIcon = document.getElementById("profileIcon");
+      const dropdownMenu = document.querySelector(".dropdown-menu");
+    
+      profileIcon.addEventListener("click", () => {
+        dropdownMenu.style.display = dropdownMenu.style.display === "none" || dropdownMenu.style.display === "" ? "block" : "none";
+      });
+    
+      // Close the dropdown if clicked outside
+      window.addEventListener("click", function(event) {
+        if (!profileIcon.contains(event.target)) {
+          dropdownMenu.style.display = "none";
+        }
+      });
+    </script>
+  </body>
+</html>

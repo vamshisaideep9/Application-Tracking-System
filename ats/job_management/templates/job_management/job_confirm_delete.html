@@ -1,0 +1,25 @@
+{% extends 'base.html' %} {% load static %} {% block title %}Delete Job
+{% endblock %} {% block css_files %}
+<link rel="stylesheet" href="{% static 'job_management/delete_job.css' %}" />
+<link
+  href="https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css"
+  rel="stylesheet"
+/>
+{% endblock %} {% block content %}
+<div class="container4">
+    <div class="delete-head">
+        <h2 class="confirm-delete">Confirm Delete</h2>
+    </div>
+    <div class="para-delete">
+        <p class="title-3">Are you sure you want to delete "{{ object.title }}"?</p>
+    </div>
+  <div class="form-delete">
+    <form method="post" class="form-delete2">
+        {% csrf_token %}
+        <button type="submit" class="button-delete">Yes, delete</button>
+        <a href="{% url 'home' %}" class="cancel-delete">Cancel</a>
+      </form>
+  </div>
+  
+</div>
+{% endblock %}

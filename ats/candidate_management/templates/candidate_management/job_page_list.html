@@ -1,0 +1,14 @@
+{% extends 'candidate_management/base2.html' %} {% load static %}
+{% block title %} Apply Job {% endblock %} {% block css_files %}
+<link
+  rel="stylesheet"
+  href="{% static 'candidate_management/job_page_list.css' %}"
+/>
+{% endblock %} {% block content %}
+<div class="container-3">
+  <div class="search-bar">
+    <i class="bx bx-search search-bar01"></i>
+    <input type="search" class="search-input" placeholder="search" />
+  </div>
+</div>
+{% endblock %}
