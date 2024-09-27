@@ -33,6 +33,7 @@ ALLOWED_HOSTS = []
 INSTALLED_APPS = [
     'job_management',
     'candidate_management',
+    'accounts',
     'django_extensions',
     'django.contrib.admin',
     'django.contrib.auth',
@@ -40,6 +41,7 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+   
 ]
 
 MIDDLEWARE = [
@@ -138,3 +140,8 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'public','static')
+
+AUTH_USER_MODEL = 'accounts.User'
+
+
+LOGOUT_REDIRECT_URL = 'candidate_management:home2' 

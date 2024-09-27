@@ -54,34 +54,39 @@
     <section class="overlay"></section>
     <main>{% block content %}{% endblock %}</main>
     <script>
-      const navBar = document.querySelector("nav"),
-        menuBtns = document.querySelectorAll(".menu-icon"),
-        overlay = document.querySelector(".overlay");
+      document.addEventListener("DOMContentLoaded", () => {
+          const navBar = document.querySelector("nav"),
+              menuBtns = document.querySelectorAll(".menu-icon"),
+              overlay = document.querySelector(".overlay");
 
-      menuBtns.forEach((menuBtn) => {
-        menuBtn.addEventListener("click", () => {
-          navBar.classList.toggle("open");
-        });
-      });
+          // Ensure the navBar is closed on page load
+          navBar.classList.remove("open");
 
-      overlay.addEventListener("click", () => {
-        navBar.classList.remove("open");
+          menuBtns.forEach((menuBtn) => {
+              menuBtn.addEventListener("click", () => {
+                  navBar.classList.toggle("open");
+              });
+          });
+
+          overlay.addEventListener("click", () => {
+              navBar.classList.remove("open");
+          });
       });
-    </script>
-    <script>
-      const profileIcon = document.getElementById("profileIcon");
-      const dropdownMenu = document.querySelector(".dropdown-menu");
-    
-      profileIcon.addEventListener("click", () => {
+  </script>
+  <script>
+    const profileIcon = document.getElementById("profileIcon");
+    const dropdownMenu = document.querySelector(".dropdown-menu");
+
+    profileIcon.addEventListener("click", () => {
         dropdownMenu.style.display = dropdownMenu.style.display === "none" || dropdownMenu.style.display === "" ? "block" : "none";
-      });
-    
-      // Close the dropdown if clicked outside
-      window.addEventListener("click", function(event) {
-        if (!profileIcon.contains(event.target)) {
-          dropdownMenu.style.display = "none";
+    });
+
+    // Close the dropdown if clicked outside
+    window.addEventListener("click", function(event) {
+        if (!profileIcon.contains(event.target) && !dropdownMenu.contains(event.target)) {
+            dropdownMenu.style.display = "none";
         }
-      });
-    </script>
+    });
+</script>
   </body>
 </html>

@@ -1,6 +1,5 @@
 @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@100;300;400;500;600&display=swap');
 
-
 * {
     box-sizing: border-box;
     margin: 0;
@@ -9,46 +8,90 @@
 }
 
 body {
-    min-height: 100%;
+    min-height: 100vh;
     background-color: white;
 }
 
-.open2 .logo-name{
-    margin-left: 15px;
-    color: black;
-}
-
-
 nav {
     display: flex;
-    justify-content: space-between; /* Spread content to left and right */
+    justify-content: space-between;
     align-items: center;
     position: fixed;
     top: 0;
     left: 0;
-    height: 50px;
+    height: 60px;
     width: 100%;
-    background: #8db4e0;
-    transition: width 0.3s;
+    background: #c7dbf3;
     box-shadow: 0 0 1px rgba(0, 0, 0, 0.1);
+    padding: 0 20px;
+}
+
+.open2 .logo-name {
+    color: black;
+    font-size: 24px;
+}
+
+.open2 .nav-links {
+    display: flex;
+    align-items: center;
+    margin-left: auto;
+}
+
+.open2 .nav-links a {
+    padding: 10px 15px;
+    text-decoration: none;
+    font-weight: 500;
+    margin: 0 1px;
+    color: black;
+    transition: border 0.3s ease, background-color 0.3s ease;
 }
 
 
+
+.open2 .sign-in {
+    margin-right: -72%; 
+    cursor: pointer;
+    text-decoration: none;
+    font-family: 'Poppins', sans-serif;
+    font-size: 12px;
+    font-weight: 500;
+    color: rgb(0, 0, 0);
+}
+
+.open2 .post-job {
+    margin-right: 15px; 
+    cursor: pointer;
+    text-decoration: none;
+    font-family: 'Poppins', sans-serif;
+    font-size: 12px;
+    font-weight: 500;
+    color: rgb(0, 0, 0);
+}
 
 .open2 .home-01{
-    margin-right: 87%;
-    padding: 12px;
-    margin-top: 3px;
-    color: black;
     text-decoration: none;
-    font-weight: bold;
-    padding: 10px 20px; /* Padding around the link */
-    border: 2px solid transparent; /* Initially transparent border */
-    transition: border 0.3s ease; /* Smooth transition for the border */
+    font-family: 'Poppins', sans-serif;
+    color: black;
+    font-weight: 500;
+    margin-left: 17px;
+    margin-top: 3px;
+    padding: 4px 4px;
 }
 
 
-.open2 .home-01:hover{
-    border: 2px solid black; /* Border becomes visible on hover */
-    background-color: transparent; /* Ensure no background on hover */
+
+@media (max-width: 768px) {
+    nav {
+        flex-direction: column;
+        height: auto;
+    }
+
+    .open2 .nav-links {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+
+    .open2 .nav-links a {
+        margin: 5px 0;
+    }
 }

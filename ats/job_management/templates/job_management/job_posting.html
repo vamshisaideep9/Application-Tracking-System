@@ -7,7 +7,7 @@
 />
 {% endblock %} {% block content %}
 <div class="job1-container">
-  <h2>Create Job Post</h2>
+  <h2 class = "title">Create Job Post</h2>
 </div>
 
 <div class="form1-container">
@@ -38,9 +38,7 @@
     </div>
 
     <div class="form-group">
-      <label for="{{ form.is_remote.id_for_label }}"
-        >{{ form.is_remote.label }}</label
-      >
+      <label for="{{ form.is_remote.id_for_label }}">{{ form.is_remote.label }}</label>
       <div class="is-remote-box">{{ form.is_remote }}</div>
     </div>
 
@@ -74,7 +72,7 @@
         <div class="scrollable-checkbox">
           {% for choice in form.job_type %}
           <div class="checkbox-option">
-            {{ choice }} <!-- Renders the checkbox with its label -->
+            {{ choice }} 
           </div>
           {% endfor %}
         </div>
@@ -116,7 +114,7 @@
         <div class="scrollable-checkbox">
           {% for choice in form.requirements %}
           <div class="checkbox-option">
-            {{ choice }} <!-- Renders the checkbox with its label -->
+            {{ choice }} 
           </div>
           {% endfor %}
         </div>

@@ -6,23 +6,28 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>{% block title %}{% endblock %}</title>
     <link rel="stylesheet" href="{% static 'candidate_management/homepage.css' %}">
-    <link
-      href="https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css"
-      rel="stylesheet"
-    />
+    <link href="https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css" rel="stylesheet" />
     {% block css_files %}{% endblock %}
 </head>
 <body>
-   <nav class="open2">
-     <h2 class="logo-name">
-        Demo
-     </h2>
-     <a href="{% url 'home2' %}" class="home-01">Home</a>
-   </nav>
+    <nav class="open2">
+        <h2 class="logo-name">Demo</h2>
+        <a href="{% url 'candidate_management:home2' %}" class="home-01">Home</a>
+        <div class="nav-links">
+            {% if not user.is_authenticated %}
+              <a href="{% url 'accounts:candidate-sign-in' %}" class="sign-in">Sign In</a>
+              <a href="#" class="post-job">Employers/Post Job</a>
+            {% else %}
+              <form action="{% url 'candidate_management:logout' %}" method="post" style="display:inline;">
+                {% csrf_token %}
+                <button type="submit" class="logout-button">Logout</button>
+              </form>
+            {% endif %}
+        </div>
+    </nav>
     <main>
-      {% block content %}
-      {% endblock %}
+        {% block content %}
+        {% endblock %}
     </main>
-   
 </body>
 </html>
