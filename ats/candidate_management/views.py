@@ -1,12 +1,14 @@
-
-
+from django.contrib import messages 
 from django.shortcuts import render, get_object_or_404, redirect
+from django.urls import reverse
 from django.http import HttpResponse
 from django.views.generic import ListView, CreateView, TemplateView
 from job_management.models import Jobpost
+from django.contrib.auth.decorators import login_required
 from .models import Document, Candidate
-from .forms import DocumentForm
 # Create your views here.
+
+
 
 
 class ListJobs(ListView):
@@ -36,24 +38,78 @@ class ListJobs(ListView):
         if selected_job_id:
             context['selected_job'] = Jobpost.objects.filter(pk=selected_job_id).first()
         return context
+
+from .forms import CandidateForm
+
+
+class UserApply(CreateView):
+    model = Candidate
+    form_class = CandidateForm
+    template_name = "candidate_management/user_apply.html"
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        job_id = self.kwargs.get('job_id')
+        job = get_object_or_404(Jobpost, id=job_id)
+        context['job'] = job
+
+        # Check if the candidate profile already exists
+        candidate = Candidate.objects.filter(user=self.request.user).first()
+        if candidate:
+            context['form'] = self.form_class(instance=candidate)  # Autofill the form with existing data
+        else:
+            context['form'] = self.form_class()  # Create a new form if no candidate exists
+
+        return context
+
+    def form_valid(self, form):
+        job_id = self.kwargs.get('job_id')
+        job = get_object_or_404(Jobpost, id=job_id)
+        candidate = form.save(commit=False)
+        candidate.job = job
+        candidate.user = self.request.user
+        candidate.save()
+        return super().form_valid(form)
+
+    def get_success_url(self):
+         return reverse('candidate_management:success', kwargs={'user_id': self.request.user.id})
+
     
-def upload_file(request):
-    if request.method == 'POST':
-        form = DocumentForm(request.POST, request.FILES)  # Include request.FILES
-        if form.is_valid():
-            form.save()  # Save the file to the database
-            return redirect('apply')  # Redirect after success
-    else:
-        form = DocumentForm()
-
-    return render(request, 'candidate_management/upload.html', {'form': form})
-
-class UserApply(TemplateView):
-    template_name = 'candidate_management/user_apply.html'
-
-
-    
+class SUccessView(TemplateView):
+    template_name = "candidate_management/success.html"
 
 
 
 
+from rest_framework import viewsets, permissions
+from rest_framework.decorators import action    
+from rest_framework.response import Response
+from django.contrib.auth import get_user_model
+from .serializers import DocumentSerializer, CandidateSerializer
+from job_management.permissions import IsOwnerOrReadOnly
+
+
+User = get_user_model()
+
+class DocumentViewSet(viewsets.ModelViewSet):
+    serializer_class = DocumentSerializer
+    permission_classes = [permissions.IsAuthenticated]
+
+    def get_queryset(self):
+        return Document.objects.filter(user=self.request.user)
+
+    def perform_create(self, serializer):
+        serializer.save(user=self.request.user)
+
+class CandidateViewSet(viewsets.ModelViewSet):
+    serializer_class = CandidateSerializer
+    permission_classes = [permissions.IsAuthenticated]
+
+    def get_queryset(self):
+        return Candidate.objects.filter(user=self.request.user).order_by('-created_at')
+
+    def perform_create(self, serializer):
+        serializer.save(user=self.request.user)
+
+    def perform_update(self, serializer):
+        serializer.save()

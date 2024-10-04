@@ -23,8 +23,6 @@
       </ul>
     </div>
     {% endif %}
-
-    <!-- Form Groups -->
     <div class="form-group">
       <label for="{{ form.title.id_for_label }}">{{ form.title.label }}</label>
       <div class="title-box">{{ form.title }}</div>
@@ -74,7 +72,7 @@
         <div class="scrollable-checkbox">
           {% for choice in form.job_type %}
           <div class="checkbox-option">
-            {{ choice }} <!-- Renders the checkbox with its label -->
+            {{ choice }} 
           </div>
           {% endfor %}
         </div>
@@ -116,7 +114,7 @@
         <div class="scrollable-checkbox">
           {% for choice in form.requirements %}
           <div class="checkbox-option">
-            {{ choice }} <!-- Renders the checkbox with its label -->
+            {{ choice }} 
           </div>
           {% endfor %}
         </div>
@@ -134,13 +132,9 @@
     const locationFields = document.getElementById("location-fields");
 
     function toggleLocationFields() {
-      locationFields.style.display = remoteCheckbox.checked ? "none" : "block"; // Show/hide location fields
+      locationFields.style.display = remoteCheckbox.checked ? "none" : "block";
     }
-
-    // Initial check
     toggleLocationFields();
-
-    // Add event listener for change
     remoteCheckbox.addEventListener("change", toggleLocationFields);
   });
 </script>

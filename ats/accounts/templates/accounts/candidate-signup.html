@@ -9,13 +9,11 @@
     <link rel="stylesheet" href="{% static 'accounts/candidate-sign-up.css' %}">
 </head>
 <body>
-    <div class="signup-container"> <!-- Added a container for better centering -->
+    <div class="signup-container">
         <h2>Sign Up</h2>
         <form method="post">
             {% csrf_token %}
             <div class="signup-form">
-
-                <!-- Email Field -->
                 <div class="form-group">
                     <div class="email-label">
                         {{ form.email.label_tag }}
@@ -25,19 +23,15 @@
                         {{ form.email.errors }}
                     </div>
                 </div>
-
-                <!-- Password Field -->
                 <div class="form-group">
                     <div class="password-label">
-                        {{ form.password.label_tag }}
+                        {{ form.password1.label_tag }}
                     </div>
                     <div class="password-input">
-                        {{ form.password }}
-                        {{ form.password.errors }}
+                        {{ form.password1 }}
+                        {{ form.password1.errors }}
                     </div>
                 </div>
-
-                <!-- Password Confirmation Field -->
                 <div class="form-group">
                     <div class="password-confirm-label">
                         {{ form.password2.label_tag }}
@@ -47,8 +41,6 @@
                         {{ form.password2.errors }}
                     </div>
                 </div>
-
-                <!-- Submit Button -->
                 <div class="form-group">
                     <button type="submit" class="signup-button">Sign Up</button>
                 </div>

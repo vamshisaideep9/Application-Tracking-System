@@ -16,7 +16,7 @@ class JobForm(ModelForm):
 
     class Meta:
         model = Jobpost
-        fields = "__all__"
+        fields = ['title', 'description', 'is_remote', 'city', 'area', 'pincode', 'address', 'job_type', 'min_pay', 'max_pay', 'start_date', 'category', 'requirements']
         widgets = {
             'title': forms.TextInput(attrs={'placeholder':'Enter job title', 'class' : 'form-control'}),
             'description' : forms.Textarea(attrs={'rows':5,'placeholder':'Enter job description','class':'form-control'}),

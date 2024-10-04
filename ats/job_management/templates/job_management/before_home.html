@@ -1,0 +1,30 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Candidate Management</title>
+    <link rel="stylesheet" href="{% static 'job_management/before_home.css' %}">
+</head>
+<body>
+    <nav class="main">
+        <div class="sub-word">
+            <h2 class="logo-name">Demo</h2>
+            <sub class="for-employers">For employers</sub>
+        </div>  
+        <div class="right-side">
+            <a class="find-job-link" href="{% url 'candidate_management:home1' %}"><h2 class="find-job">Find job</h2></a>
+            <a href="{% url 'accounts:employer-sign-in' %}"><button class="sign-in">Signin</button></a>
+        </div>
+    </nav>
+
+    <section class="container"></section>
+        <div class="main-content">
+            <h1 class="headline">Let's hire your next great candidate</h1>
+            <a href = "{% url 'accounts:employer-sign-up' %}"><button class="post-job-btn">Post a new job</button></a>
+        </div>
+    </section>
+    
+</body>
+</html>

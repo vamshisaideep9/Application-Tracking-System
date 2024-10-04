@@ -34,6 +34,7 @@ INSTALLED_APPS = [
     'job_management',
     'candidate_management',
     'accounts',
+    'parser',
     'django_extensions',
     'django.contrib.admin',
     'django.contrib.auth',
@@ -41,6 +42,9 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'rest_framework.authtoken',
+    'rest_framework',
+    'django_filters',
    
 ]
 
@@ -139,9 +143,30 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 
 MEDIA_URL = '/media/'
-MEDIA_ROOT = os.path.join(BASE_DIR, 'public','static')
+MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 
 AUTH_USER_MODEL = 'accounts.User'
 
 
 LOGOUT_REDIRECT_URL = 'candidate_management:home2' 
+
+REST_FRAMEWORK = {
+    'DEFAULT_AUTHENTICATION_CLASSES': [
+        'rest_framework.authentication.SessionAuthentication',  
+        'rest_framework.authentication.BasicAuthentication',     
+        'rest_framework.authentication.TokenAuthentication',     
+    ],
+
+    'DEFAULT_PERMISSION_CLASSES': [
+        'rest_framework.permissions.IsAuthenticatedOrReadOnly', # Default permission
+    ],
+    'DEFAULT_FILTER_BACKENDS': [
+        'django_filters.rest_framework.DjangoFilterBackend',    # Enables filtering
+        'rest_framework.filters.SearchFilter',                  # Enables searching
+        'rest_framework.filters.OrderingFilter',                # Enables ordering
+    ],
+
+    'EXCEPTION_HANDLER' : 'candidate_management.exception_handler.handle',
+    'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.PageNumberPagination',
+    'PAGE_SIZE': 10,  
+}

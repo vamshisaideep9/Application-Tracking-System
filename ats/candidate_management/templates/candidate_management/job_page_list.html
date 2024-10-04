@@ -42,9 +42,7 @@
         <div class="job-title">
           {{ job.title|title }}
           <div class="dots">
-            <span class="dots-vertical material-symbols-outlined"
-              ></span
-            >
+            <span class="dots-vertical material-symbols-outlined"></span>
           </div>
         </div>
         <small class="small-item">
@@ -66,7 +64,7 @@
         {% if selected_job.is_remote %} Remote {% else %} {{ selected_job.city }}, {{ selected_job.area }} {% endif %}
       </small>
       <br />
-      <a href="{% url 'candidate_management:upload' %}"><button class="selected-job-button">Apply Now</button></a>
+      <a href="{% url 'candidate_management:upload' selected_job.id %}"><button class="selected-job-button">Apply Now</button></a>
       <hr class="line-1" />
       <strong class="selected-job-job-type">Job Type</strong>
       <small class="job-type">

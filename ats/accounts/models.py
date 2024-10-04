@@ -19,6 +19,16 @@ class UserManager(BaseUserManager):
         user.save(using = self._db)
         return user
     
+    def create_candidate(self, email, password=None, **extra_fields):
+        extra_fields.setdefault('is_candidate', True)
+        extra_fields.setdefault('is_employer', False)
+        return self.create_user(email, password, **extra_fields)
+
+    def create_employer(self, email, password=None, **extra_fields):
+        extra_fields.setdefault('is_employer', True)
+        extra_fields.setdefault('is_candidate', False)
+        return self.create_user(email, password, **extra_fields)
+    
     def create_staffuser(self, email, password, **extra_fields):
         extra_fields.setdefault('is_staff', True)
 

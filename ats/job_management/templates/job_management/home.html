@@ -15,7 +15,7 @@
         <h2 class="title-h2">Jobs Created By You</h2>
     </div>
     <div class="archived-button">
-        <a href="{% url 'archived' %}" class="archived-jobs">Archived Jobs</a>
+        <a href="{% url 'job_management:archived' %}" class="archived-jobs">Archived Jobs</a>
     </div>
     <table class="job-table">
         <thead>
@@ -41,9 +41,9 @@
                 </td>
                 <td>{{ job.posted_at }}</td>
                 <td>
-                    <a href="{% url 'review_job_post' job.pk %}">Edit</a> |
-                    <a href="{% url 'delete' job.pk %}">Delete</a> |
-                    <a href="{% url 'job_archive' job.pk %}">Archive</a> 
+                    <a href="{% url 'job_management:review_job_post' job.pk %}">Edit</a> |
+                    <a href="{% url 'job_management:delete' job.pk %}">Delete</a> |
+                    <a href="{% url 'job_management:job_archive' job.pk %}">Archive</a> 
                      
                 </td>
             </tr>

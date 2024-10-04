@@ -17,7 +17,7 @@
     <form method="post" class="form-delete2">
         {% csrf_token %}
         <button type="submit" class="button-delete">Yes, delete</button>
-        <a href="{% url 'home' %}" class="cancel-delete">Cancel</a>
+        <a href="{% url 'job_management:home' %}" class="cancel-delete">Cancel</a>
       </form>
   </div>
   

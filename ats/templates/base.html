@@ -28,13 +28,13 @@
         <div class="sidebar-content">
           <ul class="lists">
             <li class="list">
-              <a href="{% url 'job_create_step_1' %}" class="nav-link">
+              <a href="{% url 'job_management:job_create_step_1' %}" class="nav-link">
                 <i class="bx bx-plus icon"></i>
                 <span class="link">Create</span>
               </a>
             </li>
             <li class="list">
-              <a href="{% url 'home' %}" class="nav-link">
+              <a href="{% url 'job_management:home' %}" class="nav-link">
                 <i class="bx bx-home-alt icon"></i>
                 <span class="link">Home</span>
               </a>
@@ -46,7 +46,10 @@
         <i class='bx bx-user profile-icon' id="profileIcon"></i>
         <div class="dropdown-menu">
           <ul>
-            <li><a href="#">Logout</a></li>
+            <form action="{% url 'job_management:logout' %}" method="post" style="display:inline;">
+              {% csrf_token %}
+              <li><button type="submit" class="logout-button">Logout</button></li>
+            </form>
           </ul>
         </div>
       </div>
@@ -59,7 +62,6 @@
               menuBtns = document.querySelectorAll(".menu-icon"),
               overlay = document.querySelector(".overlay");
 
-          // Ensure the navBar is closed on page load
           navBar.classList.remove("open");
 
           menuBtns.forEach((menuBtn) => {

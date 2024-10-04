@@ -10,21 +10,21 @@
     background-color: #fff;
     padding: 20px;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-    width: 90%;  /* Adjusted to take more space on the page */
-    margin: 20px auto; /* Center the container horizontally */
+    width: 90%;  
+    margin: 20px auto; 
     margin-top: 30px;
 }
 
 .job-table {
-    width: 100%;  /* Ensure the table takes the full width of its container */
+    width: 100%; 
     border-collapse: collapse;
-    table-layout: auto; /* Allow the table columns to adjust dynamically */
+    table-layout: auto;
     margin-top: 20px;
 }
 
 .job-table th, .job-table td {
     border: 1px solid #ddd;
-    padding: 12px;  /* Added more padding for better readability */
+    padding: 12px;  
     text-align: left;
 }
 

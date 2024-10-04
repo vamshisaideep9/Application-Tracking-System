@@ -1,5 +1,8 @@
 from django.db import models
 from django.utils import timezone
+from django.contrib.auth import get_user_model
+
+User = get_user_model()
 
 # Helps in categorizing job postings
 class Category(models.Model):
@@ -26,6 +29,8 @@ class JobType(models.Model):
 
 # Foreign key to category and Many-to-Many relationships with requirement
 class Jobpost(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name="jobposts")
+
     title = models.CharField(max_length=30)
     description = models.TextField()
 

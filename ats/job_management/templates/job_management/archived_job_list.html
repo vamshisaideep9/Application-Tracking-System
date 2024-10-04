@@ -40,9 +40,9 @@
                 </td>
                 <td>{{ job.posted_at }}</td>
                 <td>
-                    <a href="{% url 'review_job_post' job.pk %}">Edit</a> |
-                    <a href="{% url 'delete' job.pk %}">Delete</a> |
-                    <a href="{% url 'restore' job.pk %}">Restore</a>
+                    <a href="{% url 'job_management:review_job_post' job.pk %}">Edit</a> |
+                    <a href="{% url 'job_management:delete' job.pk %}">Delete</a> |
+                    <a href="{% url 'job_management:restore' job.pk %}">Restore</a>
                 </td>
             </tr>
             {% empty %}

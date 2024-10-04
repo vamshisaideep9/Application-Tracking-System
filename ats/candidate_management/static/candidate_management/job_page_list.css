@@ -52,7 +52,7 @@ body {
     background-color: #9090e4;
     border: none;
     color: white;
-    padding: 3px 10px; /* Added padding for a better button look */
+    padding: 3px 10px; 
     border-radius: 8px;
     font-size: 16px;
     cursor: pointer;
@@ -74,7 +74,7 @@ body {
 
 .job-details-box {
     max-height: 400px;
-    flex:1; /* Fixed width for job details */
+    flex:1; 
     padding: 20px;
     background-color: #f9f9f9;
     border: 1px solid #e0e0e0;
