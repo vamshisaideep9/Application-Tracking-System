@@ -4,14 +4,11 @@ from candidate_management.forms import DocumentForm
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from job_management.models import Jobpost
-from django.db import IntegrityError
 from PyPDF2 import PdfReader
 import google.generativeai as genai
 import os
 import json
 
-
-# Assuming you have set up your Google API key
 os.environ["GOOGLE_API_KEY"] = "AIzaSyDoMLCl-6zQI76X_wv2wpDcI1pk8bEpmW4"
 genai.configure(api_key=os.environ["GOOGLE_API_KEY"])
 model = genai.GenerativeModel("models/gemini-1.5-pro")
@@ -25,7 +22,6 @@ def parse_resume(file):
     return text
 
 def resumes_details(resume):
-    # Prompt with detailed request
     prompt = f"""
     You are a resume parsing assistant. Given the following resume text, extract all the important details and return them in a well-structured JSON format.
 
@@ -68,23 +64,16 @@ def upload_file(request, job_id):
                 return redirect('candidate_management:apply', job_id=job.id)
 
             if file.name.endswith('.pdf'):
-                resume_text = parse_resume(file)  # Assume this function works correctly
+                resume_text = parse_resume(file)  
                 resume_data = resumes_details(resume_text)
 
-                # Check the raw resume data before parsing
-                print("Resume Data before parsing:", resume_data)  
-
                 response_clean = resume_data.replace("```json", "").replace("```", "").strip()
-
-                
-               
-
              
                 try:
                         data = json.loads(response_clean)
                 except json.JSONDecodeError as e:
                         messages.error(request, 'Failed to parse resume data. Please check the content of the resume.')
-                        print("JSONDecodeError:", str(e))  # Print error message
+                        print("JSONDecodeError:", str(e))
                         return redirect('candidate_management:apply', job_id=job.id)
                 if candidate:
                     candidate.full_name = data.get('Full Name', candidate.full_name)
@@ -95,7 +84,6 @@ def upload_file(request, job_id):
                     candidate.non_technical_skills = ', '.join(data.get('Skills', {}).get('Non-Technical Skills', []))  
                     candidate.education = "\n".join([f"{edu.get('Degree', 'N/A')} from {edu.get('Institute', 'N/A')} (Graduated: {edu.get('Start Date', 'N/A')} - {edu.get('End Date', 'N/A')})" for edu in data.get("Education", [])])
                     candidate.work_experience = "\n".join([f"{job.get('Role', 'N/A')} at {job.get('Company Name', 'N/A')} ({job.get('Start Date', 'N/A')} - {job.get('End Date', 'N/A')})\nResponsibilities: {', '.join(job.get('Responsibilities', []))}" for job in data.get("Work Experience", [])])
-
                     candidate.save()
                     messages.success(request, 'Your candidate profile has been updated successfully.')
                     return redirect('candidate_management:apply', job_id=job.id)
@@ -112,10 +100,10 @@ def upload_file(request, job_id):
        
                     education="\n".join([f"{edu.get('Degree', 'N/A')} from {edu.get('Institute', 'N/A')} (Graduated: {edu.get('Start Date', 'N/A')} - {edu.get('End Date', 'N/A')})" for edu in data.get("Education", [])]),
                     work_experience="\n".join([f"{job.get('Role', 'N/A')} at {job.get('Company Name', 'N/A')} ({job.get('Start Date', 'N/A')} - {job.get('End Date', 'N/A')})\nResponsibilities: {', '.join(job.get('Responsibilities', []))}" for job in data.get("Work Experience", [])])
-                )
                     
-                    messages.success(request, 'Your candidate profile has been created successfully.')
-                    return redirect('candidate_management:apply', job_id=job.id)
+                )    
+                messages.success(request, 'Your candidate profile has been created successfully.')
+                return redirect('candidate_management:apply', job_id=job.id)
                 
             else:
                 messages.error(request, 'Invalid file type. Please upload a PDF file.')
@@ -131,7 +119,8 @@ def upload_file(request, job_id):
         'form': form,
         'job': job,
         'existing_document': existing_document,
-        'candidate': candidate  
+        'candidate': candidate,
+       
     })
 
 

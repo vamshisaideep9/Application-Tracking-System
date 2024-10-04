@@ -13,46 +13,23 @@
 {% block content %}
 <h1 class="upload-file">Upload a File</h1>
 
-
-{% if messages %}
-    <div class="message-container">
-        {% for message in messages %}
-            <div class="message {{ message.tags }}">{{ message }}</div>
-        {% endfor %}
+<div class="flex-container">  
+    <div class="container-upload">
+        <form method="post" enctype="multipart/form-data" id="upload-form" class="form-upload" onsubmit="return validateFileSelection()">
+            {% csrf_token %}
+            <div class="upload-label">
+                {{ form.resume.label_tag }}
+            </div>
+            <div class="upload-input">
+                <input type="file" id="{{ form.resume.id_for_label }}" name="{{ form.resume.name }}" class="file-input" onchange="updateFileName(this)">
+            </div>
+            <div class="button-group">
+                <button class="upload-button" type="submit">Upload</button>
+            </div>
+        </form>
     </div>
-{% endif %}
 
-<div class="container-upload">
-    <form method="post" enctype="multipart/form-data" id="upload-form" class="form-upload">
-        {% csrf_token %}
-        
-      
-         {% if form.errors %}
-        <ul class="error-list">
-            {% for field in form %}
-                {% for error in field.errors %}
-                    <li><strong>{{ field.label }}</strong>: {{ error }}</li>
-                {% endfor %}
-            {% endfor %}
-            {% for error in form.non_field_errors %}
-                <li>{{ error }}</li>
-            {% endfor %}
-        </ul>
-        {% endif %} 
-
-        <div class="upload-label">
-            {{ form.resume.label_tag }}
-        </div>
-        <div class="upload-input">
-            {{ form.resume }}
-        </div>
-        <div class="button-group">
-            <button class="upload-button" type="submit">Upload</button>
-        </div>
-    </form>
-</div>
-
-{% if job %}
+    {% if job %}
     <div class="job-details-container">
         <h2 class="job-details-title">Job Details</h2>
         <div class="job-details">
@@ -80,7 +57,28 @@
             </p>
         </div>
     </div>
-{% else %}
-    <p>No job details available.</p>
-{% endif %}
-{% endblock %} 
+    {% else %}
+        <p>No job details available.</p>
+    {% endif %}
+</div>  
+
+<script>
+    function updateFileName(input) {
+        const fileNameElement = document.getElementById('file-name');
+        if (input.files.length > 0) {
+            fileNameElement.textContent = input.files[0].name;
+        } else {
+            fileNameElement.textContent = 'No file chosen';
+        }
+    }
+    
+    function validateFileSelection() {
+        const fileInput = document.getElementById('{{ form.resume.id_for_label }}');
+        if (fileInput.files.length === 0) {
+            alert("Please choose a file.");
+            return false; 
+        }
+        return true; 
+    }
+    </script>
+{% endblock %}

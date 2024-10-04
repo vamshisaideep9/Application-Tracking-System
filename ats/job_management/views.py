@@ -97,17 +97,15 @@ from .permissions import IsOwnerOrReadOnly
 User = get_user_model()
 
 class UserViewSet(viewsets.ReadOnlyModelViewSet):
-    #api end point that allows users to be viewed
     queryset = User.objects.all()
     serializer_class = UserSerializer
     permission_classes = [permissions.IsAuthenticated]
 
     def list(self, request, *args, **kwargs):
-        print("User:", request.user)  # Log the user making the request
+        print("User:", request.user) 
         return super().list(request, *args, **kwargs)
 
 class CategoryViewSet(viewsets.ModelViewSet):
-    #Api endpoint that allows catrgories to viewed or edited
     queryset = Category.objects.all()
     serializer_class = CategorySerializer
     permission_classes = [permissions.IsAuthenticatedOrReadOnly]

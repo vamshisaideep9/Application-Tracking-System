@@ -13,151 +13,94 @@ body {
 }
 
 
-.container-upload {
+.flex-container {
     display: flex;
-    justify-content: center;
-    align-items: center;
-    flex-direction: column;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin: 200px;
+}
+
+.container-upload {
+    flex: 1;
+    margin: 0 10px;
+    max-width: 400px;
     padding: 20px;
-    border: 2px dashed #ccc;
-    border-radius: 10px;
-    background-color: #f9f9f9;
-    width: 50%;
-    margin: 100px auto;
-}
-
-/* Styling for the form */
-.form-upload {
-    width: 100%;
-}
-
-/* Styling for the heading */
-.upload-file {
-    font-size: 24px;
-    font-weight: bold;
-    text-align: center;
-    margin-bottom: 20px;
-}
-
-/* Styling for the file input label */
-.upload-label {
-    margin-bottom: 10px;
-    font-size: 18px;
-    color: #333;
-}
-
-/* Styling for the file input */
-.upload-input input[type="file"] {
-    width: 100%;
-    padding: 10px;
     border: 1px solid #ccc;
-    border-radius: 5px;
-    background-color: #fff;
-    font-size: 16px;
-    color: #333;
-    cursor: pointer;
+    border-radius: 8px;
+    background-color: #f9f9f9;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
 }
-
-/* Styling for the upload button */
-.upload-button {
-    margin-top: 20px;
-    padding: 10px 20px;
-    background-color: #007bff;
-    color: #fff;
-    border: none;
-    border-radius: 5px;
-    font-size: 16px;
-    cursor: pointer;
-    width: 15%;
-}
-
-.upload-button:hover {
-    background-color: hsl(211, 100%, 35%);
-}
-
-
-.next-button {
-    margin-top: 20px;
-    margin-left: 470px;
-    padding: 10px 209px;
-    background-color: #007bff;
-    color: #fff;
-    border: none;
-    border-radius: 5px;
-    font-size: 16px;
-    cursor: pointer;
-    width: 25%;
-}
-
 
 .job-details-container {
-    margin: 20px auto;
-    margin-bottom: 30px;
+    flex: 1;
+    margin: 0 10px;
+    max-width: 600px;
     padding: 20px;
+    border: 1px solid #ccc;
     border-radius: 8px;
-    background-color: #fff;
-    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
-    max-width: 500px;
-    height: 250px;
-    overflow-y: auto;
-    overflow-x: hidden;
+    background-color: #f9f9f9;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    overflow-y: auto; 
+    max-height: 400px; 
 }
 
 .job-details-container::-webkit-scrollbar {
-    width: 8px;
-}
-
-.job-details-container::-webkit-scrollbar-track {
-    background: rgba(0, 0, 0, 0.1);
-    border-radius: 10px;
+    width: 8px; 
 }
 
 .job-details-container::-webkit-scrollbar-thumb {
-    background: rgba(0, 0, 0, 0.5);
-    border-radius: 10px;
+    background: rgba(0, 0, 0, 0.2); 
+    border-radius: 10px; 
 }
 
-.job-details-title {
-    font-size: 24px;
-    margin-bottom: 15px;
+.job-details-container::-webkit-scrollbar-track {
+    background: transparent; 
 }
 
-.job-field {
-    margin: 10px 0;
-    font-size: 16px;
-}
-
-.job-value {
-    font-weight: normal;
-    color: #555;
-}
-
-.button-group{
+.form-upload {
     display: flex;
+    flex-direction: column;
+}
+
+.upload-label {
+    margin-bottom: 10px;
+    font-weight: bold;
+}
+
+.upload-input {
+    margin-bottom: 20px;
 }
 
 .upload-button {
-    background-color: #007bff;
+    padding: 10px 15px;
+    background-color: #007BFF;
     color: white;
     border: none;
     border-radius: 5px;
     cursor: pointer;
-    transition: background-color 0.3s;
+    transition: background-color 0.3s ease;
 }
 
 .upload-button:hover {
     background-color: #0056b3;
 }
 
-/* Responsive design */
-@media (max-width: 768px) {
-    .container-upload {
-        width: 80%;
-    }
+.button-group {
+    display: flex;
+    justify-content: space-between;
 }
 
-@media (max-width: 480px) {
-    .container-upload {
-        width: 100%;
-    }
+.job-details-title {
+    margin-bottom: 15px;
+    font-size: 1.5em;
 }
+
+.job-field {
+    margin-bottom: 10px;
+    font-size: 1em;
+}
+
+.job-value {
+    font-weight: normal;
+}
+
