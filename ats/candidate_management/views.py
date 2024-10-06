@@ -1,13 +1,13 @@
 from django.contrib import messages 
 from django.shortcuts import render, get_object_or_404, redirect
-from django.urls import reverse
+from django.urls import reverse, reverse_lazy
 from django.http import HttpResponse
 from django.views.generic import ListView, CreateView, TemplateView
 from job_management.models import Jobpost
-from django.contrib.auth.decorators import login_required
-from .models import Document, Candidate
+from .models import Document, Candidate, Application
+from django.core.mail import send_mail
+from django.conf import settings
 # Create your views here.
-
 
 
 
@@ -42,8 +42,9 @@ class ListJobs(ListView):
 from .forms import CandidateForm
 
 
+
 class UserApply(CreateView):
-    model = Candidate
+    model = Application  
     form_class = CandidateForm
     template_name = "candidate_management/user_apply.html"
 
@@ -53,30 +54,90 @@ class UserApply(CreateView):
         job = get_object_or_404(Jobpost, id=job_id)
         context['job'] = job
 
-        # Check if the candidate profile already exists
-        candidate = Candidate.objects.filter(user=self.request.user).first()
+    
+        try:
+            candidate = Candidate.objects.get(user=self.request.user)
+        except Candidate.DoesNotExist:
+            candidate = None 
+
+        form = self.form_class(instance=candidate)
         if candidate:
-            context['form'] = self.form_class(instance=candidate)  # Autofill the form with existing data
+            form.fields['email_address'].initial = candidate.email_address  # Autofill email_address
         else:
-            context['form'] = self.form_class()  # Create a new form if no candidate exists
+            form.fields['email_address'].initial = self.request.user.email  # Or use the user's email   
+
+        context['form'] = form
 
         return context
 
     def form_valid(self, form):
         job_id = self.kwargs.get('job_id')
         job = get_object_or_404(Jobpost, id=job_id)
-        candidate = form.save(commit=False)
-        candidate.job = job
-        candidate.user = self.request.user
-        candidate.save()
-        return super().form_valid(form)
 
-    def get_success_url(self):
-         return reverse('candidate_management:success', kwargs={'user_id': self.request.user.id})
+        # Check if the user has already applied for this job
+        if Application.objects.filter(candidate__user=self.request.user, job=job).exists():
+            form.add_error(None, "You have already applied for this job.")
+            return self.form_invalid(form)
 
-    
-class SUccessView(TemplateView):
+        # If the candidate doesn't exist, create one
+        candidate, created = Candidate.objects.get_or_create(user=self.request.user)
+
+        # Update candidate data
+        form_data = form.save(commit=False)
+        candidate.full_name = form_data.full_name
+        candidate.contact_number = form_data.contact_number
+        candidate.email_address = form_data.email_address
+        candidate.location = form_data.location
+        candidate.technical_skills = form_data.technical_skills
+        candidate.non_technical_skills = form_data.non_technical_skills
+        candidate.education = form_data.education
+        candidate.work_experience = form_data.work_experience
+        candidate.save()  # Save the candidate
+
+        # Create the application instance
+        application = Application(
+            candidate=candidate,
+            job=job,
+            status='Applied',  # Initial status
+        )
+        application.save()
+
+        # Send a confirmation email
+        send_mail(
+            subject='Application Received',
+            message=f'Hi {candidate.email_address}, your application for {job.title} has been received.',
+            from_email=settings.EMAIL_HOST_USER,
+            recipient_list=[candidate.email_address],
+            fail_silently=False,
+        )
+
+        messages.success(self.request, "Your application has been submitted successfully.")
+        return redirect('candidate_management:success', user_id=self.request.user.id)
+
+    def form_invalid(self, form):
+        print("Form is invalid")  # Debugging statement
+        print(form.errors)  # Print out form errors
+        messages.error(self.request, "There was an error in your submission.")
+        return super().form_invalid(form)
+class SuccessView(TemplateView):
     template_name = "candidate_management/success.html"
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        user_id = self.kwargs.get('user_id')
+        user = get_object_or_404(User, id=user_id)
+        context['user'] = user
+        return context
+
+class SuccessView(TemplateView):
+    template_name = "candidate_management/success.html"
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        user_id = self.kwargs.get('user_id')
+        user = get_object_or_404(User, id=user_id)
+        context['user'] = user
+        return context
 
 
 

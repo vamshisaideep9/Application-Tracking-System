@@ -12,6 +12,24 @@ body {
     background-color: white;
 }
 
+.messages {
+    list-style: none;
+    padding: 0;
+}
+
+.messages li {
+    padding: 10px;
+    margin: 10px 0;
+    border: 1px solid #ddd;
+    background-color: #f9f9f9;
+}
+
+.success {
+    border-color: #28a745;
+    color: #155724;
+    background-color: #d4edda;
+}
+
 .container-3 {
     background-color: #f6f6f6;
     padding: 20px;

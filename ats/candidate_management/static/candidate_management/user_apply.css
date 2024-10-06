@@ -81,3 +81,19 @@ input:focus, select:focus, textarea:focus {
     justify-content: space-between;
     margin-top: 20px;
 }
+
+
+.application-recived{
+    font-family: 'Poppins', sans-serif;
+    color: black;
+    text-align: center;
+    margin-top: 100px;
+}
+
+.back-link{
+    font-family: 'Poppins', sans-serif;
+    color: blue;
+    text-decoration: none;
+    text-align: center;
+    margin-top: 110px;
+}

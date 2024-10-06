@@ -1,12 +1,15 @@
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth import login, authenticate
 from django.views import View
 from django.urls import reverse_lazy 
+import os
 from .forms import CandidateSignupForm, CandidateSigninForm, EmployerSigninForm, EmployerSignupForm
 from django.contrib.auth import get_user_model
 from django.views.generic import CreateView
-
+from django.contrib import messages
 User = get_user_model()
+
+
 
 class CandidateSignupView(CreateView):
     model = User

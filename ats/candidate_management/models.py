@@ -16,9 +16,10 @@ def validate_file_size(value):
         raise ValidationError("File size cannot exceed 2 MB.")
 class Candidate(models.Model):
         user = models.OneToOneField(User, on_delete=models.CASCADE, related_name="candidate")
+        job = models.ForeignKey(Jobpost, on_delete=models.CASCADE, null=True)
         full_name = models.CharField(max_length=30, blank=True)
         contact_number = models.CharField(max_length=20, blank=True)
-        email_address = models.EmailField(unique=True)
+        email_address = models.EmailField()
         location = models.CharField(max_length=100, blank=True)
         technical_skills = models.TextField(blank=True)
         non_technical_skills = models.TextField(blank=True)
@@ -28,6 +29,8 @@ class Candidate(models.Model):
 
         class Meta:
             ordering = ['-created_at']
+        
+            unique_together = (('user', 'job'),)
 
         def __str__(self):
             return self.full_name

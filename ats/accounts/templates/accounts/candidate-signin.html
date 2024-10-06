@@ -10,6 +10,13 @@
 </head>
 <body>
     <div class="signup-container">
+        {% if messages %}
+    {% for message in messages %}
+        <div class="alert alert-info">
+            {{ message }}
+        </div>
+    {% endfor %}
+{% endif %}
         <h2>Sign in</h2>
         <form method="post">
             {% csrf_token %}

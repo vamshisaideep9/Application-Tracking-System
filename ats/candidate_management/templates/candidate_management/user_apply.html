@@ -14,52 +14,35 @@
 <div class="container">
     <h1>Apply for {{ job.title }}</h1>
 
-    <form method="post">
+    <form method="post" action="{% url 'candidate_management:apply' job.id %}"> 
         {% csrf_token %}  
+
+        {% if form.errors %}
+        <ul class="form-errors">
+            {% for field in form %}
+                {% if field.errors %}
+                    <li>{{ field.label }}: {{ field.errors|join:", " }}</li>
+                {% endif %}
+            {% endfor %}
+            {% if form.non_field_errors %}
+                <li>{{ form.non_field_errors }}</li>
+            {% endif %}
+        </ul>
+        {% endif %}
+
+        {% for field in form %}
         <div class="form-group">
-            <label for="{{ form.full_name.id_for_label }}">Full Name:</label>
-            {{ form.full_name }}
-            {{ form.full_name.errors }}
+            <label for="{{ field.id_for_label }}">{{ field.label }}</label>
+            {{ field }}
+            {% if field.errors %}
+                <div class="error">{{ field.errors|join:", " }}</div>
+            {% endif %}
         </div>
-        <div class="form-group">
-            <label for="{{ form.contact_number.id_for_label }}">Contact Number:</label>
-            {{ form.contact_number }}
-            {{ form.contact_number.errors }}
-        </div>
-        <div class="form-group">
-            <label for="{{ form.email_address.id_for_label }}">Email Address:</label>
-            {{ form.email_address }}
-            {{ form.email_address.errors }}
-        </div>
-        <div class="form-group">
-            <label for="{{ form.location.id_for_label }}">Location:</label>
-            {{ form.location }}
-            {{ form.location.errors }}
-        </div>
-        <div class="form-group">
-            <label for="{{ form.technical_skills.id_for_label }}">Technical Skills:</label>
-            {{ form.technical_skills }}
-            {{ form.technical_skills.errors }}
-        </div>
-        <div class="form-group">
-            <label for="{{ form.non_technical_skills.id_for_label }}">Non-Technical Skills:</label>
-            {{ form.non_technical_skills }}
-            {{ form.non_technical_skills.errors }}
-        </div>
-        <div class="form-group">
-            <label for="{{ form.education.id_for_label }}">Education:</label>
-            {{ form.education }}
-            {{ form.education.errors }}
-        </div>
-        <div class="form-group">
-            <label for="{{ form.work_experience.id_for_label }}">Work Experience:</label>
-            {{ form.work_experience }}
-            {{ form.work_experience.errors }}
-        </div> 
-        
+        {% endfor %}
+
         <div class="button-container">
             <a href="{% url 'candidate_management:home2' %}" class="btn btn-secondary">Back to Job Listing</a>
-            <button type="submit" class="btn btn-primary">Submit</button>
+            <button type="submit" class="btn btn-primary" {% if form.errors %}disabled{% endif %}>Submit</button>
         </div>
     </form>
 </div>

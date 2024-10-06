@@ -7,6 +7,9 @@ from django.contrib.auth import authenticate
 User = get_user_model()
 
 
+User = get_user_model()
+
+
 class BaseSignupForm(forms.ModelForm):
     password1 = forms.CharField(label='Password', widget=forms.PasswordInput(attrs={
         'placeholder': 'Password',
@@ -83,6 +86,3 @@ class EmployerSigninForm(BaseSigninForm):
         if not User.objects.filter(email=email, is_employer=True).exists():
             raise forms.ValidationError("Email does not exist or is not an employer.")
         return email
-
-
-
