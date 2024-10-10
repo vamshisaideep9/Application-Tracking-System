@@ -1,0 +1,19 @@
+{% extends "base.html" %}
+{% load static %}
+{% block css_files %}
+<link rel="stylesheet" href="{% static 'job_management/job_details.css' %}">
+{% endblock %}
+{% block title %}Candidate Details{% endblock %}
+
+{% block content %}
+<div class="container">
+    <h1>Candidate Details</h1>
+    <p><strong>Contact Number:</strong> {{ candidate.contact_number}}</p>
+    <p><strong>Email Address:</strong> {{ candidate.email_address }}</p>
+    <p><strong>Location:</strong> {{ candidate.location }}</p>
+    <p><strong>Technical Skills:</strong> {{ candidate.technical_skills }}</p>
+    <p><strong>Non-Technical Skills:</strong> {{ candidate.non_technical_skills }}</p>
+    <p><strong>Education:</strong> {{ candidate.education }}</p>
+    <p><strong>Work Experience:</strong> {{ candidate.work_experience }}</p>
+</div>
+{% endblock %}

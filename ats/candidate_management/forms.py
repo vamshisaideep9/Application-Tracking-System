@@ -1,4 +1,4 @@
-from .models import Document, Candidate
+from .models import Document, Candidate, Application
 from django import forms
 
 
@@ -17,3 +17,12 @@ class CandidateForm(forms.ModelForm):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.fields['email_address'].widget.attrs['readonly'] = True   
+
+
+class ApplicationForm(forms.ModelForm):
+    class Meta:
+        model = Application
+        fields = ('status', 'interview_date')
+    
+
+

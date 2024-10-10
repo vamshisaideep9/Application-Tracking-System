@@ -1,0 +1,45 @@
+{% extends "base.html" %}   
+{% load static %}
+{% block css_files %}
+<link rel="stylesheet" href="{% static 'job_management/job_application.css' %}">
+{% endblock %}
+{% block title %}Application Management{% endblock %}
+
+{% block content %}
+<div class="container app-management">
+    <h1 class="app-title">Job Applications</h1>
+     
+    <table class="app-table">
+        <thead class="app-table-head">
+            <tr class="app-table-row">
+                <th class="app-table-header">Job Title</th>
+                <th class="app-table-header">Candidate</th>
+                <th class="app-table-header">Status</th>
+                <th class="app-table-header">Resume</th>
+                <th class="app-table-header">Applied At</th>
+            </tr>
+        </thead>
+        <tbody class="app-table-body">
+            {% for app in applications %}
+                <tr class="app-table-row">
+                    <td class="app-table-data"><a href="{% url 'job_management:view-job-details' app.job.pk %}">{{ app.job.title }}</a></td>
+                    <td class="app-table-data"><a href="{% url 'job_management:candidate-details' app.candidate.pk %}">{{ app.candidate.full_name }}</a></td>
+                    <td class="app-table-data">{{ app.status }}</td>
+                    <td class="app-table-data">
+                        {% if app.resume and app.resume.get_resume_url %}
+                            <a href="{{ app.resume.get_resume_url }}" target="_blank" class="resume-link">View Resume</a>
+                        {% else %}
+                            <span class="no-resume">No Resume Uploaded</span>
+                        {% endif %}
+                    </td>
+                    <td class="app-table-data">{{ app.applied_at }}</td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+    {% if not applications %}
+        <p class="no-applications">No applications found for your jobs.</p>
+    {% endif %}
+</div>
+{% endblock %}

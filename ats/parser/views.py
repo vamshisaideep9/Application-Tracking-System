@@ -47,17 +47,19 @@ def resumes_details(resume):
         print("Error during resume parsing:", str(e))  
         return json.dumps({"error": "Failed to parse resume."}) 
     
+from candidate_management.models import Application
+
+
 @login_required
 def upload_file(request, job_id):
     job = get_object_or_404(Jobpost, id=job_id)
-    existing_document = Document.objects.filter(user=request.user, job_post=job).first()
     candidate = Candidate.objects.filter(user=request.user).first()
 
     if request.method == 'POST':
         form = DocumentForm(request.POST, request.FILES)
 
         if form.is_valid():
-            file = request.FILES['resume']
+            file = request.FILES.get('resume')
 
             if not file or file.name == '':
                 messages.error(request, 'No selected file.')
@@ -68,16 +70,19 @@ def upload_file(request, job_id):
                 resume_data = resumes_details(resume_text)
 
                 response_clean = resume_data.replace("```json", "").replace("```", "").strip()
-             
+
                 try:
-                        data = json.loads(response_clean)
+                    data = json.loads(response_clean)
                 except json.JSONDecodeError as e:
-                        messages.error(request, 'Failed to parse resume data. Please check the content of the resume.')
-                        print("JSONDecodeError:", str(e))
-                        return redirect('candidate_management:apply', job_id=job.id)
+                    messages.error(request, 'Failed to parse resume data. Please check the content of the resume.')
+                    print("JSONDecodeError:", str(e))
+                    return redirect('candidate_management:apply', job_id=job.id)
+
+                # Update or create candidate information
                 if candidate:
+                    # Update existing candidate's information
                     candidate.full_name = data.get('Full Name', candidate.full_name)
-                    candidate.email_address = request.user.email
+                    candidate.email_address = request.user.email  
                     candidate.contact_number = data.get('Contact Number', candidate.contact_number)
                     candidate.location = data.get('Location', candidate.location)
                     candidate.technical_skills = ', '.join(data.get('Skills', {}).get('Technical Skills', []))  
@@ -86,23 +91,26 @@ def upload_file(request, job_id):
                     candidate.work_experience = "\n".join([f"{job.get('Role', 'N/A')} at {job.get('Company Name', 'N/A')} ({job.get('Start Date', 'N/A')} - {job.get('End Date', 'N/A')})\nResponsibilities: {', '.join(job.get('Responsibilities', []))}" for job in data.get("Work Experience", [])])
                     candidate.save()
                     messages.success(request, 'Your candidate profile has been updated successfully.')
-                    return redirect('candidate_management:apply', job_id=job.id)
                 else:
+                    # Create a new candidate if not exists
                     candidate = Candidate.objects.create(
-                    user=request.user,
-                    full_name=data.get('Full Name', ''),
-                    email_address = request.user.email,
-                    contact_number=data.get('Contact Number', ''),
-                    location=data.get('Location', ''),
-                    technical_skills=', '.join(data.get('Skills', {}).get('Technical Skills', [])),  
-                    non_technical_skills=', '.join(data.get('Skills', {}).get('Non-Technical Skills', [])),  
+                        user=request.user,
+                        full_name=data.get('Full Name', ''),
+                        email_address=request.user.email,
+                        contact_number=data.get('Contact Number', ''),
+                        location=data.get('Location', ''),
+                        technical_skills=', '.join(data.get('Skills', {}).get('Technical Skills', [])),  
+                        non_technical_skills=', '.join(data.get('Skills', {}).get('Non-Technical Skills', [])),  
+                        education="\n".join([f"{edu.get('Degree', 'N/A')} from {edu.get('Institute', 'N/A')} (Graduated: {edu.get('Start Date', 'N/A')} - {edu.get('End Date', 'N/A')})" for edu in data.get("Education", [])]),
+                        work_experience="\n".join([f"{job.get('Role', 'N/A')} at {job.get('Company Name', 'N/A')} ({job.get('Start Date', 'N/A')} - {job.get('End Date', 'N/A')})\nResponsibilities: {', '.join(job.get('Responsibilities', []))}" for job in data.get("Work Experience", [])])
+                    )    
+                    messages.success(request, 'Your candidate profile has been created successfully.')
 
-       
-                    education="\n".join([f"{edu.get('Degree', 'N/A')} from {edu.get('Institute', 'N/A')} (Graduated: {edu.get('Start Date', 'N/A')} - {edu.get('End Date', 'N/A')})" for edu in data.get("Education", [])]),
-                    work_experience="\n".join([f"{job.get('Role', 'N/A')} at {job.get('Company Name', 'N/A')} ({job.get('Start Date', 'N/A')} - {job.get('End Date', 'N/A')})\nResponsibilities: {', '.join(job.get('Responsibilities', []))}" for job in data.get("Work Experience", [])])
-                    
-                )    
-                messages.success(request, 'Your candidate profile has been created successfully.')
+                # Create a Document instance and save it
+                document = Document(candidate=candidate, resume=file)
+                document.save()  # Save the Document instance first
+
+
                 return redirect('candidate_management:apply', job_id=job.id)
                 
             else:
@@ -113,16 +121,10 @@ def upload_file(request, job_id):
             messages.error(request, 'There was an error with the upload form. Please try again.')
 
     else:
-        form = DocumentForm(instance=existing_document) if existing_document else DocumentForm()
+        form = DocumentForm()
 
     return render(request, 'candidate_management/upload.html', {
         'form': form,
         'job': job,
-        'existing_document': existing_document,
         'candidate': candidate,
-       
     })
-
-
-
- 

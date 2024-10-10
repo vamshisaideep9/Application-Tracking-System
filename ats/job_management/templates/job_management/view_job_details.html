@@ -1,0 +1,24 @@
+{% extends "base.html" %}
+{% load static %}
+{% block css_files %}
+<link rel="stylesheet" href="{% static 'job_management/job_details.css' %}">
+{% endblock %}
+{% block title %}Job Details{% endblock %}
+
+{% block content %}
+<div class="container">
+    <h1>{{ job.title }}</h1>
+    <p><strong>Description:</strong> {{ job.description }}</p>
+    <p><strong>Type:</strong> {{ job.job_type.all|join:", " }}</p>
+    <p><strong>Location:</strong> {% if job.is_remote %}Remote{% else %}{{ job.city }}{% endif %}</p>
+    <p><strong>Area:</strong> {{ job.area }}</p>
+    <p><strong>Pincode:</strong> {{ job.pincode }}</p>
+    <p><strong>Address:</strong> {{ job.address }}</p>
+    <p><strong>Minimum Pay:</strong> {{ job.min_pay }}</p>
+    <p><strong>Maximum Pay:</strong> {{ job.max_pay }}</p>
+    <p><strong>Start Date:</strong> {{ job.start_date }}</p>
+    <p><strong>Posted At:</strong> {{ job.posted_at }}</p>
+    <p><strong>Category:</strong> {{ job.category }}</p>
+    <p><strong>Requirements:</strong> {{ job.requirements.all|join:", " }}</p>
+</div>
+{% endblock %}

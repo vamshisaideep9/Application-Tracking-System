@@ -1,9 +1,12 @@
-from django.db.models.query import QuerySet
-from django.views.generic import CreateView, TemplateView, UpdateView, DeleteView, ListView
+from django.views.generic import CreateView, TemplateView, UpdateView, DeleteView, ListView, DetailView
 from django.shortcuts import redirect, get_object_or_404
-from job_management.models import Jobpost
 from django.contrib import messages
+from django.views import View
+from .models import Jobpost
+from django.shortcuts import render
 from django.urls import reverse_lazy, reverse
+from candidate_management.models import Application, Candidate
+
 from .forms import JobForm
 
 # Create your views here.
@@ -75,8 +78,6 @@ def ArchiveJob(request, pk):
         job.is_archived = True
         job.save()
         return redirect('job_management:home')
-
-
     
 class SuccessView(TemplateView):
     template_name = 'job_management/success.html'
@@ -84,6 +85,32 @@ class SuccessView(TemplateView):
 
 class BeforeHome(TemplateView):
     template_name = 'job_management/before_home.html'
+
+from django.contrib.auth.mixins import LoginRequiredMixin
+
+class JobApplication(LoginRequiredMixin, TemplateView):
+    template_name = 'job_management/job_applications.html'
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        current_user = self.request.user
+        employer_jobs = Jobpost.objects.filter(user = current_user)
+        applications = Application.objects.filter(job__in = employer_jobs)
+        context['applications'] = applications
+        return context
+    
+class JobpostDetailView(DetailView):
+    model = Jobpost
+    template_name = 'job_management/view_job_details.html'
+    context_object_name = 'job'
+
+class CandidateDetailView(DeleteView):
+    model = Candidate
+    template_name = 'job_management/view_candidate_detail.html'
+    context_object_name = 'candidate'
+
+
+
 
 
 from rest_framework import viewsets, permissions
@@ -144,5 +171,5 @@ class JobPostViewSet(viewsets.ModelViewSet):
         jobpost.is_archived=True
         jobpost.save()
         return Response({'status':'Job post archived'})
-
+    
 

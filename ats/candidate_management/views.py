@@ -42,7 +42,9 @@ class ListJobs(ListView):
 from .forms import CandidateForm
 
 
+from django.core.exceptions import ValidationError
 
+from django.urls import reverse_lazy
 class UserApply(CreateView):
     model = Application  
     form_class = CandidateForm
@@ -54,7 +56,6 @@ class UserApply(CreateView):
         job = get_object_or_404(Jobpost, id=job_id)
         context['job'] = job
 
-    
         try:
             candidate = Candidate.objects.get(user=self.request.user)
         except Candidate.DoesNotExist:
@@ -62,9 +63,9 @@ class UserApply(CreateView):
 
         form = self.form_class(instance=candidate)
         if candidate:
-            form.fields['email_address'].initial = candidate.email_address  # Autofill email_address
+            form.fields['email_address'].initial = candidate.email_address  
         else:
-            form.fields['email_address'].initial = self.request.user.email  # Or use the user's email   
+            form.fields['email_address'].initial = self.request.user.email    
 
         context['form'] = form
 
@@ -79,30 +80,30 @@ class UserApply(CreateView):
             form.add_error(None, "You have already applied for this job.")
             return self.form_invalid(form)
 
-        # If the candidate doesn't exist, create one
+        # Get or create the candidate
         candidate, created = Candidate.objects.get_or_create(user=self.request.user)
 
-        # Update candidate data
-        form_data = form.save(commit=False)
-        candidate.full_name = form_data.full_name
-        candidate.contact_number = form_data.contact_number
-        candidate.email_address = form_data.email_address
-        candidate.location = form_data.location
-        candidate.technical_skills = form_data.technical_skills
-        candidate.non_technical_skills = form_data.non_technical_skills
-        candidate.education = form_data.education
-        candidate.work_experience = form_data.work_experience
-        candidate.save()  # Save the candidate
+        # Update candidate information
+        candidate.full_name = form.cleaned_data['full_name']
+        candidate.contact_number = form.cleaned_data['contact_number']
+        candidate.email_address = form.cleaned_data['email_address']
+        candidate.location = form.cleaned_data['location']
+        candidate.technical_skills = form.cleaned_data['technical_skills']
+        candidate.non_technical_skills = form.cleaned_data['non_technical_skills']
+        candidate.education = form.cleaned_data['education']
+        candidate.work_experience = form.cleaned_data['work_experience']
+        candidate.save()
 
-        # Create the application instance
+        document = Document.objects.filter(candidate=candidate).last()
         application = Application(
             candidate=candidate,
             job=job,
-            status='Applied',  # Initial status
+            resume=document,  
+            status='Applied', 
         )
         application.save()
 
-        # Send a confirmation email
+        # Send confirmation email
         send_mail(
             subject='Application Received',
             message=f'Hi {candidate.email_address}, your application for {job.title} has been received.',
@@ -115,19 +116,11 @@ class UserApply(CreateView):
         return redirect('candidate_management:success', user_id=self.request.user.id)
 
     def form_invalid(self, form):
-        print("Form is invalid")  # Debugging statement
-        print(form.errors)  # Print out form errors
+        print("Form is invalid")  
+        print(form.errors)  
         messages.error(self.request, "There was an error in your submission.")
         return super().form_invalid(form)
-class SuccessView(TemplateView):
-    template_name = "candidate_management/success.html"
 
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-        user_id = self.kwargs.get('user_id')
-        user = get_object_or_404(User, id=user_id)
-        context['user'] = user
-        return context
 
 class SuccessView(TemplateView):
     template_name = "candidate_management/success.html"
@@ -138,7 +131,6 @@ class SuccessView(TemplateView):
         user = get_object_or_404(User, id=user_id)
         context['user'] = user
         return context
-
 
 
 
@@ -146,21 +138,33 @@ from rest_framework import viewsets, permissions
 from rest_framework.decorators import action    
 from rest_framework.response import Response
 from django.contrib.auth import get_user_model
-from .serializers import DocumentSerializer, CandidateSerializer
-from job_management.permissions import IsOwnerOrReadOnly
+from rest_framework.exceptions import NotFound, ValidationError
+from .serializers import DocumentSerializer, CandidateSerializer, ApplicationSerializer
 
 
 User = get_user_model()
 
 class DocumentViewSet(viewsets.ModelViewSet):
+    queryset = Document.objects.all()
     serializer_class = DocumentSerializer
     permission_classes = [permissions.IsAuthenticated]
 
-    def get_queryset(self):
-        return Document.objects.filter(user=self.request.user)
-
     def perform_create(self, serializer):
-        serializer.save(user=self.request.user)
+        try:
+            candidate = Candidate.objects.get(user=self.request.user)
+        except Candidate.DoesNotExist:
+            raise NotFound("Candidate profile not found.")
+
+        job_post_id = self.request.data.get('job_post')
+        if job_post_id:
+            try:
+                job_post = Jobpost.objects.get(id=job_post_id)
+            except Jobpost.DoesNotExist:
+                raise NotFound("Jobpost not found.")
+            serializer.save(candidate=candidate, job_post=job_post)
+        else:
+            serializer.save(candidate=candidate)
+
 
 class CandidateViewSet(viewsets.ModelViewSet):
     serializer_class = CandidateSerializer
@@ -170,7 +174,35 @@ class CandidateViewSet(viewsets.ModelViewSet):
         return Candidate.objects.filter(user=self.request.user).order_by('-created_at')
 
     def perform_create(self, serializer):
+        if Candidate.objects.filter(user=self.request.user).exists():
+            raise ValidationError("Candidate already exists for this user.")
         serializer.save(user=self.request.user)
 
     def perform_update(self, serializer):
         serializer.save()
+
+class ApplicationViewSet(viewsets.ModelViewSet):
+    serializer_class = ApplicationSerializer
+    permission_classes = [permissions.IsAuthenticated]
+
+    def get_queryset(self):
+        candidate = Candidate.objects.filter(user=self.request.user).first()
+        if candidate:
+            return Application.objects.filter(candidate=candidate).order_by('-applied_at')
+        return Application.objects.none()
+
+    def perform_create(self, serializer):
+        candidate = Candidate.objects.filter(user=self.request.user).first()
+        if not candidate:
+            raise NotFound("Candidate profile not found.")
+        resume_id = self.request.data.get('resume')
+        job_id = self.request.data.get('job')
+        job = get_object_or_404(Jobpost, id=job_id)
+
+        if resume_id:
+            resume = get_object_or_404(Document, id=resume_id, candidate=candidate)
+        else:
+            raise ValidationError("Resume ID is required.")
+        serializer.save(candidate=candidate, resume=resume, job=job)    
+
+

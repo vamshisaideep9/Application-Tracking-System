@@ -1,47 +1,54 @@
 from rest_framework import serializers
 from django.contrib.auth import get_user_model
 from .models import Candidate, Application, Document
+from job_management.models import Jobpost
 
 User = get_user_model()
-
-
-class UserSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = User
-        fields = ['id', 'email']
-        read_only_fields = ['id', 'email']
-
-class DocumentSerializer(serializers.ModelSerializer):
-    user = UserSerializer(read_only=True)
-    class Meta:
-        model = Document
-        fields = ['id', 'user', 'resume']
-        read_only_fields = ['id']
 
 class CandidateSerializer(serializers.ModelSerializer):
     class Meta:
         model = Candidate
-        fields = "__all__"
-        read_only_fields = ['id', 'user']
+        fields = '__all__'
 
-    def create(self, validated_data):
-        candidate_info = Candidate.objects.create(**validated_data)
-        return candidate_info
+class DocumentSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Document
+        fields = ('id', 'resume', 'uploaded_at', 'job_post')
+        read_only_fields = ('id', 'uploaded_at')
+
+    def validate_job_post(self, value):
+        if value and not Jobpost.objects.filter(id=value.id).exists():
+            raise serializers.ValidationError("Jobpost does not exist.")
+        return value
 
 
 class ApplicationSerializer(serializers.ModelSerializer):
-    candidate = CandidateSerializer() 
-    job = serializers.StringRelatedField() 
+    candidate = CandidateSerializer(read_only=True)
+    resume = serializers.PrimaryKeyRelatedField(queryset=Document.objects.all(), required=True)
+    job = serializers.PrimaryKeyRelatedField(queryset=Jobpost.objects.all(), required=True)
 
     class Meta:
         model = Application
-        fields = [
-            'id', 'candidate', 'job', 'status', 'applied_at', 
-            'interview_date', 'feedback'
-        ]
+        fields = (
+            'id',
+            'candidate',
+            'resume',
+            'job',
+            'status',
+            'applied_at',
+            'interview_date',
+            'feedback',
+        )
+        read_only_fields = ('id', 'candidate', 'applied_at')
 
-    def create(self, validated_data):
-        candidate_data = validated_data.pop('candidate')
-        candidate = Candidate.objects.create(**candidate_data)
-        application = Application.objects.create(candidate=candidate, **validated_data)
-        return application
+    def validate_resume(self, value):
+        # Ensure the resume belongs to the candidate
+        request = self.context.get('request')
+        if request and hasattr(request, 'user'):
+            try:
+                candidate = Candidate.objects.get(user=request.user)
+                if value.candidate != candidate:
+                    raise serializers.ValidationError("Resume does not belong to the authenticated candidate.")
+            except Candidate.DoesNotExist:
+                raise serializers.ValidationError("Candidate profile not found.")
+        return value

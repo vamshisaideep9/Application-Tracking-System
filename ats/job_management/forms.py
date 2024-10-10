@@ -58,9 +58,6 @@ class JobForm(ModelForm):
             raise forms.ValidationError("Maximum pay must be greater than or equal to minimum pay.")
         return max_pay
     
-    
-
-
 
 
    

@@ -2,14 +2,15 @@ from django.contrib import admin
 from .models import Jobpost, Category, Requirement, JobType
 
 
-class JobpostAdmin(admin.ModelAdmin):
-   
-    list_display = ('title', 'user', 'city', 'start_date', 'is_archived')
-    list_filter = ('is_archived', 'job_type', 'city')
-    search_fields = ('title', 'city')
-    filter_horizontal = ('job_type', 'requirements')
-    
 
+   
+class JobpostAdmin(admin.ModelAdmin):
+    list_display = ('title', 'job_types_display', 'city', 'min_pay', 'max_pay', 'posted_at', 'is_archived')
+
+    def job_types_display(self, obj):
+        return ", ".join(str(job_type) for job_type in obj.job_type.all())
+
+    job_types_display.short_description = 'Job Types'
 class CategoryAdmin(admin.ModelAdmin):
     list_display = ('name', 'department')
     search_fields = ('name', 'department')

@@ -1,6 +1,8 @@
 from django.db import models
 from django.utils import timezone
+from django.utils.text import slugify
 from django.contrib.auth import get_user_model
+
 
 User = get_user_model()
 
@@ -27,7 +29,7 @@ class JobType(models.Model):
     def __str__(self):
         return self.name
 
-# Foreign key to category and Many-to-Many relationships with requirement
+
 class Jobpost(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE, related_name="jobposts")
 
@@ -35,30 +37,20 @@ class Jobpost(models.Model):
     description = models.TextField()
 
     is_remote = models.BooleanField(default=False)
-    city = models.CharField(max_length=20, blank=True, null=True)
+    city = models.CharField(max_length=20, blank=True, null=True, default=None)
     area = models.CharField(max_length=100, blank=True, null=True)
     pincode = models.CharField(max_length=10, blank=True, null=True)
     address = models.TextField(blank=True, null=True)
-
-    # Job Type
     job_type = models.ManyToManyField(JobType, related_name='jobposts')
-
-    # Pay
     min_pay = models.DecimalField(max_digits=10, decimal_places=2)
     max_pay = models.DecimalField(max_digits=10, decimal_places=2)
-
     start_date = models.DateField()
-
-    # Automatically set the current date when a job post is created
     posted_at = models.DateField(auto_now_add=True)
-
     is_archived = models.BooleanField(default=False)
-
     category = models.ForeignKey(Category, on_delete=models.CASCADE, related_name='jobposts', default=1)
-    # Each job is associated with a category
-
-    # Many-to-Many Relationship
     requirements = models.ManyToManyField(Requirement, related_name='jobposts')
 
     def __str__(self):
-        return f"{self.title} ({self.job_type.all()}) - {self.city or 'Remote'}"
+       job_types = ', '.join(str(job_type) for job_type in self.job_type.all())
+       location = self.city if self.city else 'Remote' if self.is_remote else 'Location not specified'
+       return f"{self.title} ({job_types}) - {location}"

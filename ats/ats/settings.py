@@ -44,6 +44,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'rest_framework.authtoken',
     'rest_framework',
+    
 ]
 
 MIDDLEWARE = [
@@ -175,7 +176,7 @@ EMAIL_HOST = 'smtp.gmail.com'
 EMAIL_PORT = 587
 EMAIL_USE_TLS = True
 EMAIL_HOST_USER = 'vamshisaideep@gmail.com'
-EMAIL_HOST_PASSWORD = 'nuwj gkgx flcx flvi'
+EMAIL_HOST_PASSWORD = 'cnvn htfh bknn tugu'
 
 
 DEFAULT_FORM_EMAIL = 'vamshisaideep@gmail.com'

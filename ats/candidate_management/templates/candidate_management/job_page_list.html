@@ -64,8 +64,8 @@
         {% if selected_job.is_remote %} Remote {% else %} {{ selected_job.city }}, {{ selected_job.area }} {% endif %}
       </small>
       <br />
-      {% if not user.is_authenticated %}
-      <a href="{% url 'accounts:candidate-sign-in'%}"><button class="selected-job-button">Apply Now</button></a>
+      {% if not user.is_authenticated  %}
+        <a href="{% url 'accounts:candidate-sign-in'%}"><button class="selected-job-button">Apply Now</button></a>
       {% else %}
       <a href="{% url 'candidate_management:upload' selected_job.id %}"><button class="selected-job-button">Apply Now</button></a>
       {% endif %}

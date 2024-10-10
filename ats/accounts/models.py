@@ -27,6 +27,7 @@ class UserManager(BaseUserManager):
     def create_employer(self, email, password=None, **extra_fields):
         extra_fields.setdefault('is_employer', True)
         extra_fields.setdefault('is_candidate', False)
+        extra_fields.setdefault('is_email_verified', False)
         return self.create_user(email, password, **extra_fields)
     
     def create_staffuser(self, email, password, **extra_fields):
@@ -58,6 +59,7 @@ class UserManager(BaseUserManager):
 class User(AbstractBaseUser):
     email = models.EmailField(verbose_name='email address', unique=True)
     is_candidate = models.BooleanField(default=False)
+    is_email_verified = models.BooleanField(default=False)
     is_employer = models.BooleanField(default=False)
     is_staff = models.BooleanField(default=False)
     admin = models.BooleanField(default=False)
