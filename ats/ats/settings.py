@@ -35,6 +35,7 @@ INSTALLED_APPS = [
     'candidate_management',
     'accounts',
     'parser',
+    'jobboards',
     'django_extensions',
     'django.contrib.admin',
     'django.contrib.auth',
@@ -179,6 +180,16 @@ EMAIL_HOST_USER = 'vamshisaideep@gmail.com'
 EMAIL_HOST_PASSWORD = 'cnvn htfh bknn tugu'
 
 
+LINKEDIN_CLIENT_ID = '86jwtojoqteyqm'
+LINKEDIN_CLIENT_SECRET = 'WPL_AP1.VhZdsyPRFE9zVnRS.2cca1g=='
+LINKEDIN_REDIRECT_URI = 'http://127.0.0.1:8000/jobboard/linkedin/callback'  
+
+
+LINKEDIN_COMPANY_ID = "104834051"
+
 DEFAULT_FORM_EMAIL = 'vamshisaideep@gmail.com'
 
 APPEND_SLASH = False
+
+
+DEBUG = True

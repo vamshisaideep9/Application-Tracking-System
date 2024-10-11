@@ -1,0 +1,13 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block css_files %}
+<link rel="stylesheet" href="{% static 'jobboards/success.css' %}">
+{% endblock %}
+{% block content %}
+<div class="container">
+    <div class="message-box">
+        <h2>Your job has been posted to LinkedIn.</h2>
+        <a href="{% url 'job_management:home' %}" class="go-back-link">Go Back</a>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,19 @@
+{% extends 'candidate_management/base2.html' %}
+{% load static %}
+
+{% block title %}
+Add Resume
+{% endblock %}
+
+{% block content %}
+<link rel="stylesheet" type="text/css" href="{% static 'candidate_management/add_resume.css' %}">
+
+<div class="container">
+    <h2>Add Resume</h2>
+    <form method="post" enctype="multipart/form-data">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <button type="submit" class="btn btn-primary">Add Resume</button>
+    </form>
+</div>
+{% endblock %}

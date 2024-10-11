@@ -26,7 +26,8 @@ urlpatterns = [
     path("jobs/", include("job_management.urls")),
     path("", include("candidate_management.urls")),
     path('accounts/', include('accounts.urls', namespace='accounts')),
-    path('api-token-auth/', obtain_auth_token, name='api_token_auth')
+    path('api-token-auth/', obtain_auth_token, name='api_token_auth'),
+    path('jobboard/', include("jobboards.urls", namespace="jobboards")),
 
 ] + static(settings.MEDIA_URL, document_root = settings.MEDIA_ROOT)
 

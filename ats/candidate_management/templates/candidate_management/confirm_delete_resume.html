@@ -1,0 +1,17 @@
+{% extends 'candidate_management/base2.html' %}
+{% load static %}
+{% block css_files %}
+<link rel="stylesheet" href="{% static 'candidate_management/confirm_delete_resume.css' %}">
+{% endblock %}
+
+{% block content %}
+    <div class="delete-container">
+        <h1>Confirm Delete Resume</h1>
+        <p>Are you sure you want to delete this resume?</p>
+        <form method="post" class="delete-form">
+            {% csrf_token %}
+            <button type="submit" class="btn btn-danger">Yes, delete</button>
+            <a href="{% url 'candidate_management:my-jobs' %}" class="btn btn-secondary">Cancel</a>
+        </form>
+    </div>
+{% endblock %}

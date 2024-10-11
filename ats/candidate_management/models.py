@@ -27,10 +27,9 @@ class Candidate(models.Model):
 
     class Meta:
         ordering = ['-created_at']
-        unique_together = (('user',),)
 
     def __str__(self):
-        return self.full_name or self.user.username  # More robust representation
+        return self.full_name or self.user.username  
 
 
 class Document(models.Model):

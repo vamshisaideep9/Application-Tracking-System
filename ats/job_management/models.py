@@ -54,3 +54,4 @@ class Jobpost(models.Model):
        job_types = ', '.join(str(job_type) for job_type in self.job_type.all())
        location = self.city if self.city else 'Remote' if self.is_remote else 'Location not specified'
        return f"{self.title} ({job_types}) - {location}"
+    

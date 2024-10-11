@@ -11,5 +11,6 @@
 {% block content %}
 <h2>Thankyou!</h2>
 <p>Your job posting has been succesfully created</p>
+<a href="{% url 'job_management:post-job-to-linkedin' job.id %}" class="btn btn-primary">Post to LinkedIn</a>
 <a href="{% url 'job_management:job_create_step_1' %}">Create Another JobPost</a>
 {% endblock %}

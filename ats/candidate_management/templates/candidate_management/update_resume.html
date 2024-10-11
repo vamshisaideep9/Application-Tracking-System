@@ -1,0 +1,43 @@
+{% extends 'candidate_management/base2.html' %}
+{% load static %}
+{% block css_files %}
+<link rel="stylesheet" href="{% static 'candidate_management/update_resume.css' %}">
+{% endblock %}
+
+{% block content %}
+<div class="form-container">
+    <h1>Update Resume</h1>
+    <form method="post" enctype="multipart/form-data" id="upload-form" class="form-upload" onsubmit="return validateFileSelection()">
+        {% csrf_token %}
+        <div class="upload-label">
+            {{ form.resume.label_tag }}
+        </div>
+        <div class="upload-input">
+            <input type="file" id="{{ form.resume.id_for_label }}" name="{{ form.resume.name }}" class="file-input" onchange="updateFileName(this)">
+        </div>
+        <div class="button-group">
+            <button class="upload-button" type="submit">Upload</button>
+        </div>
+    </form>
+</div>
+<script>
+    function updateFileName(input) {
+        const fileNameElement = document.getElementById('file-name');
+        if (input.files.length > 0) {
+            fileNameElement.textContent = input.files[0].name;
+        } else {
+            fileNameElement.textContent = 'No file chosen';
+        }
+    }
+    
+    function validateFileSelection() {
+        const fileInput = document.getElementById('{{ form.resume.id_for_label }}');
+        if (fileInput.files.length === 0) {
+            alert("Please choose a file.");
+            return false; 
+        }
+        return true; 
+    }
+    </script>
+{% endblock %}
+

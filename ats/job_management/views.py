@@ -2,6 +2,7 @@ from django.views.generic import CreateView, TemplateView, UpdateView, DeleteVie
 from django.shortcuts import redirect, get_object_or_404
 from django.contrib import messages
 from django.views import View
+from django.contrib.auth.mixins import LoginRequiredMixin
 from .models import Jobpost
 from django.shortcuts import render
 from django.urls import reverse_lazy, reverse
@@ -38,11 +39,15 @@ class JobPostUpdateView(UpdateView):
         context = super().get_context_data(**kwargs)
         context['form_title'] = 'Update Job Post'
         return context
+    def get_success_url(self):
+        return reverse_lazy('job_management:success', kwargs={'job_id': self.object.id})
     
-class JobListView(ListView):
+class JobListView(LoginRequiredMixin, ListView):
     model = Jobpost
     template_name = "job_management/home.html"
     context_object_name = 'jobs'
+
+    login_url = '/accounts/login/'
 
     def get_queryset(self):
         return Jobpost.objects.filter(user = self.request.user, is_archived=False)
@@ -56,7 +61,7 @@ class ArchivedJobList(ListView):
         return Jobpost.objects.filter(user = self.request.user, is_archived = True)
     
 def restore_job(request, pk):
-    job = get_object_or_404(Jobpost, pk=pk, user=request.user)
+    job = get_object_or_404(Jobpost, slug=pk, user=request.user)
     job.is_archived = False
     job.save()
     return redirect('job_management:home')
@@ -74,13 +79,15 @@ class JobDeleteView(DeleteView):
 
 
 def ArchiveJob(request, pk):
-        job = get_object_or_404(Jobpost, pk=pk, user = request.user)
+        job = get_object_or_404(Jobpost, slug=pk, user = request.user)
         job.is_archived = True
         job.save()
         return redirect('job_management:home')
     
-class SuccessView(TemplateView):
-    template_name = 'job_management/success.html'
+def SuccessView(request, job_id):
+    job = Jobpost.objects.get(id=job_id)  
+    return render(request, 'job_management/success.html', {'job': job})
+   
 
 
 class BeforeHome(TemplateView):

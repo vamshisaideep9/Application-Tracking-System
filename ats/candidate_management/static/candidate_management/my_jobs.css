@@ -1,0 +1,84 @@
+.table-container {
+    margin: 20px auto;
+    max-width: 100%;
+    overflow-x: auto; 
+}
+
+.job-table {
+    width: 80%;
+    border-collapse: collapse;
+    margin-left: 130px;
+    margin-top: 4%;
+    font-family: Arial, sans-serif;
+    font-size: 14px;
+    table-layout: fixed; 
+}
+
+
+.job-table thead {
+    background-color: #f8f9fa;
+}
+
+.job-table th, .job-table td {
+    padding: 12px 15px;
+    border: 1px solid #ddd;
+    text-align: left;
+}
+
+.job-table th {
+    font-weight: bold;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+}
+
+.job-table tr:nth-child(even) {
+    background-color: #f2f2f2;
+}
+
+.job-table tr:hover {
+    background-color: #e9ecef;
+}
+
+.job-table td a {
+    color: #007bff;
+    text-decoration: none;
+}
+
+.job-table td a:hover {
+    text-decoration: underline;
+}
+
+.resume-link-wrapper {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    width: 100%;
+}
+
+.resume-link-wrapper a {
+    margin-right: 10px; 
+}
+
+.more-vertical {
+    cursor: pointer;
+    color: black;
+    font-size: 20px; 
+    position: relative;
+}
+
+
+
+.dropdown-menu {
+    display: none; 
+    position: absolute;
+    top: 100%; 
+    left: 0;
+    background-color: white;
+    border: 1px solid #ddd;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.15);
+    z-index: 1000;
+}
+
+.more-vertical:hover .dropdown-menu {
+    display: block; 
+}

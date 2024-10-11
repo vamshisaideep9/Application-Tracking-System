@@ -78,6 +78,17 @@ nav {
     padding: 4px 4px;
 }
 
+.open2 .view-jobs{
+
+    text-decoration: none;
+    font-family: 'Poppins', sans-serif;
+    color: black;
+    font-weight: 500;
+    margin-left: 17px;
+    margin-top: 3px;    
+    padding: 4px 4px;
+}
+
 
 
 @media (max-width: 768px) {

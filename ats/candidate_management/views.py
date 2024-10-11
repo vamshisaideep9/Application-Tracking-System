@@ -2,11 +2,13 @@ from django.contrib import messages
 from django.shortcuts import render, get_object_or_404, redirect
 from django.urls import reverse, reverse_lazy
 from django.http import HttpResponse
-from django.views.generic import ListView, CreateView, TemplateView
+from django.views.generic import ListView, CreateView, TemplateView, UpdateView
 from job_management.models import Jobpost
 from .models import Document, Candidate, Application
+from candidate_management.forms import DocumentForm
 from django.core.mail import send_mail
 from django.conf import settings
+from django.views import View
 # Create your views here.
 
 
@@ -102,8 +104,6 @@ class UserApply(CreateView):
             status='Applied', 
         )
         application.save()
-
-        # Send confirmation email
         send_mail(
             subject='Application Received',
             message=f'Hi {candidate.email_address}, your application for {job.title} has been received.',
@@ -131,7 +131,73 @@ class SuccessView(TemplateView):
         user = get_object_or_404(User, id=user_id)
         context['user'] = user
         return context
+    
+def MyJobs(request):
+    candidate = get_object_or_404(Candidate, user=request.user)
+    applications = Application.objects.filter(candidate=candidate).select_related('job')
+    context = {
+        'applications': applications
+    }
+    return render(request, 'candidate_management/my_jobs.html', context)
 
+
+def UpdateResume(request, resume_id):
+    resume = get_object_or_404(Document, id=resume_id)
+    if resume.candidate.user != request.user:
+        return redirect('candidate_management:my-jobs')  
+    if request.method == 'POST':
+        form = DocumentForm(request.POST, request.FILES, instance=resume)
+        if form.is_valid():
+            form.save()  
+            return redirect('candidate_management:my-jobs')  
+    else:
+        form = DocumentForm(instance=resume)
+    return render(request, 'candidate_management/update_resume.html', {'form': form})
+
+def DeleteResume(request, resume_id):
+    resume = get_object_or_404(Document, id=resume_id)
+    if resume.candidate.user != request.user:
+        messages.error(request, "You do not have permission to delete this resume.")
+        return redirect('candidate_management:my-jobs')
+    
+    if request.method == 'POST':
+        resume.delete()
+        messages.success(request, "Resume deleted successfully.")
+        return redirect('candidate_management:my-jobs')
+    
+    return render(request, 'candidate_management/confirm_delete_resume.html', {'resume': resume})
+
+class AddResume(View):
+    def get(self, request, application_id):
+        application = get_object_or_404(Application, id=application_id)
+        form = DocumentForm()
+        return render(request, 'candidate_management/add_resume.html', {'form': form, 'application': application})
+
+    def post(self, request, application_id):
+        application = get_object_or_404(Application, id=application_id)
+        candidate = application.candidate  
+        form = DocumentForm(request.POST, request.FILES)
+        if form.is_valid():
+            resume = form.save(commit=False)
+            resume.candidate = candidate  
+            resume.save()
+            application.resume = resume
+            application.save()
+            return redirect('candidate_management:my-jobs')
+        return render(request, 'candidate_management/add_resume.html', {'form': form, 'application': application})
+    
+def DeleteApply(request, application_id):
+        application = get_object_or_404(Application, id=application_id)
+        if application.candidate.user != request.user:
+            messages.error(request, "You do not have permission to delete this application.")
+            return redirect('candidate_management:my-jobs')
+        
+        if request.method == 'POST':
+            application.delete()
+            messages.success(request, "Application deleted successfully.")
+            return redirect('candidate_management:my-jobs')
+        
+        return render(request, 'candidate_management/confirm_delete_application.html', {'application': application})
 
 
 from rest_framework import viewsets, permissions

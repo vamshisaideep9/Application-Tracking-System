@@ -1,6 +1,7 @@
 from django.urls import path, include
 from .views import JobCreateView, SuccessView, JobPostUpdateView, JobListView, JobDeleteView, \
     ArchiveJob, ArchivedJobList, restore_job, BeforeHome, JobApplication, JobpostDetailView, CandidateDetailView
+from jobboards.views import post_job_to_linkedin, LinkedinSuccess
 from django.contrib.auth.views import LogoutView
 
 from rest_framework.routers import DefaultRouter
@@ -32,7 +33,9 @@ urlpatterns = [
     path('create-job/', JobCreateView.as_view(), name='job_create_step_1'),
     path('application/',JobApplication.as_view(), name='application'),
     path('update/<int:pk>', JobPostUpdateView.as_view(), name='review_job_post'),
-    path('success/', SuccessView.as_view(), name='success'),    
+    path('success/<int:job_id>', SuccessView, name='success'),    
+    path('linkedin/post/<int:job_id>/', post_job_to_linkedin, name='post-job-to-linkedin'),
+    path('linkedin-success/<int:job_id>', LinkedinSuccess, name='linkedin-success'),
     path('job-details/<int:pk>', JobpostDetailView.as_view(), name='view-job-details'),
     path('candidate-details/<int:pk>', CandidateDetailView.as_view(), name='candidate-details'),
     path('logout/', LogoutView.as_view(next_page='job_management:home2'), name='logout'),
