@@ -1,6 +1,6 @@
 from django.urls import path, include
 from .views import JobCreateView, SuccessView, JobPostUpdateView, JobListView, JobDeleteView, \
-    ArchiveJob, ArchivedJobList, restore_job, BeforeHome, JobApplication, JobpostDetailView, CandidateDetailView
+    ArchiveJob, ArchivedJobList, restore_job, BeforeHome, JobApplication, JobpostDetailView, CandidateDetailView, update_application_status
 from jobboards.views import post_job_to_linkedin, LinkedinSuccess
 from django.contrib.auth.views import LogoutView
 
@@ -32,6 +32,7 @@ urlpatterns = [
     path('restore/<int:pk>', restore_job, name='restore'),
     path('create-job/', JobCreateView.as_view(), name='job_create_step_1'),
     path('application/',JobApplication.as_view(), name='application'),
+    path('update-status/<int:app_id>/', update_application_status, name='update-status'),
     path('update/<int:pk>', JobPostUpdateView.as_view(), name='review_job_post'),
     path('success/<int:job_id>', SuccessView, name='success'),    
     path('linkedin/post/<int:job_id>/', post_job_to_linkedin, name='post-job-to-linkedin'),

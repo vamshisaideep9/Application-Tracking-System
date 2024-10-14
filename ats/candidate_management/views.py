@@ -2,7 +2,7 @@ from django.contrib import messages
 from django.shortcuts import render, get_object_or_404, redirect
 from django.urls import reverse, reverse_lazy
 from django.http import HttpResponse
-from django.views.generic import ListView, CreateView, TemplateView, UpdateView
+from django.views.generic import ListView, CreateView, TemplateView, DetailView
 from job_management.models import Jobpost
 from .models import Document, Candidate, Application
 from candidate_management.forms import DocumentForm
@@ -199,6 +199,16 @@ def DeleteApply(request, application_id):
         
         return render(request, 'candidate_management/confirm_delete_application.html', {'application': application})
 
+
+class JobDetailsView(DetailView):
+    model = Application
+    template_name = "candidate_management/job_details.html"
+    context_object_name = "application"
+    pk_url_kwarg = "application_id"
+
+    def get_queryset(self):
+        return Application.objects.select_related('job', 'candidate', 'resume')
+    
 
 from rest_framework import viewsets, permissions
 from rest_framework.decorators import action    

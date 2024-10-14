@@ -117,6 +117,16 @@ class CandidateDetailView(DeleteView):
     context_object_name = 'candidate'
 
 
+def update_application_status(request, app_id):
+    if request.method == 'POST':
+        app = get_object_or_404(Application, pk=app_id)
+        new_status = request.POST.get('status')
+        if new_status in dict(Application._meta.get_field('status').choices).keys():
+            app.status = new_status
+            app.save()
+        return redirect(reverse('job_management:application'))
+
+
 
 
 

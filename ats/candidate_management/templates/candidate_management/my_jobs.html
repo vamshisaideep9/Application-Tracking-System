@@ -44,7 +44,7 @@ My jobs
         <tbody>
             {% for app in applications %}
             <tr>
-                <td>{{ app.job.title }}</td>
+                <td><a href = "{% url 'candidate_management:application-details' app.id%}">{{ app.job.title }}</a></td>
                 <td class="resume-icon">
                     <div class="resume-link-wrapper">
                         {% if app.resume.id %}
